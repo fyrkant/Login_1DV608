@@ -1,6 +1,8 @@
 <?php
 
-class LoginView {
+namespace view;
+
+class Login {
 	private static $login = 'LoginView::Login';
 	private static $logout = 'LoginView::Logout';
 	private static $name = 'LoginView::UserName';

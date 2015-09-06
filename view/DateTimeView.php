@@ -5,7 +5,7 @@ class DateTimeView {
 
 	public function show() {
 
-		$now = new DateTime("GMT+2");
+		$now = new DateTime("Europe/Stockholm");
 
 		$day = date_format($now, "l");
 

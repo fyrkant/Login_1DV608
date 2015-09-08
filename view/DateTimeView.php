@@ -2,17 +2,17 @@
 
 namespace view;
 
-require_once("controller/DateTimeString.php");
+class DateTimeView {
 
-class DateTime {
+	private $dateTimeController;
 
+	public function __construct(\controller\DateTimeController $dateTimeController) {
+        $this->dateTimeController = $dateTimeController;
+	}
 
-	public function show() {
+	public function getHTML() {
 
-		$dtc = new \controller\DateTimeString();
+        return '<p>' . $this->dateTimeController->getFormatted() . '</p>';
 
-		$timeString = $dtc->getFormatted();
-
-		return '<p>' . $timeString . '</p>';
 	}
 }

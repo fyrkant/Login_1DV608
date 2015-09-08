@@ -2,7 +2,7 @@
 
 namespace view;
 
-class Login {
+class LoginView {
 	private static $login = 'LoginView::Login';
 	private static $logout = 'LoginView::Logout';
 	private static $name = 'LoginView::UserName';
@@ -49,6 +49,7 @@ class Login {
 	* @return  void, BUT writes to standard output!
 	*/
 	private function generateLoginFormHTML($message) {
+
 		return '
 			<form method="post" > 
 				<fieldset>

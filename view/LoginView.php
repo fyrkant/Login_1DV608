@@ -138,5 +138,15 @@ class LoginView
         }
     }
 
+    /**
+     * @param mixed $message
+     */
+    public function setMessage($message)
+    {
+        $this->message = $message;
+    }
+
+
+
 	
 }

@@ -35,6 +35,7 @@ class MainController
     public function doControl() {
         if($this->loginView->userWantsToLogOut()) {
             $this->loginModel->logOut();
+            $this->loginView->setMessage("Bye bye!");
         } else if ($this->loginView->userTriedToLogin()) {
             $this->loginView->tryLogIn();
         }

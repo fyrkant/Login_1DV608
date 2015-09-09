@@ -53,30 +53,5 @@ class LoginModel
         } else {
             throw new \Exception("Wrong name or password");
         }
-
-
-
     }
-
-
-//    /**
-//     * LoginModel constructor.
-//     * @param $name
-//     * @param $password
-//     */
-//    public function __construct($name, $password)
-//    {
-//        if ($name == "") {
-//            throw new \Exception("Username is missing");
-//        } else {
-//            $this->name = $name;
-//        }
-//        if ($password == "") {
-//            throw new \Exception("Password is missing");
-//        } else {
-//            $this->password = $password;
-//        }
-//    }
-
-
 }

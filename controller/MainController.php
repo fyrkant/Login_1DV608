@@ -13,39 +13,52 @@ class MainController
 {
     private $loginModel;
     private $loginView;
-    private $layoutView;
-    private $dateTimeView;
+    private $messageController;
 
     /**
      * MainController constructor.
      * @param $loginModel
      * @param $loginView
-     * @param $layoutView
-     * @param $dateTimeView
      */
-    public function __construct(\model\LoginModel $loginModel, \view\LoginView $loginView, \view\LayoutView $layoutView, \view\DateTimeView $dateTimeView)
+    public function __construct(\model\LoginModel $loginModel, \view\LoginView $loginView, \controller\MessageController $messageController)
     {
         $this->loginModel = $loginModel;
         $this->loginView = $loginView;
-        $this->layoutView = $layoutView;
-        $this->dateTimeView = $dateTimeView;
+        $this->messageController = $messageController;
+    }
+
+    /**
+     * @return \model\LoginModel
+     */
+    public function getLoginModel()
+    {
+        return $this->loginModel;
+    }
+
+    /**
+     * @return \view\LoginView
+     */
+    public function getLoginView()
+    {
+        return $this->loginView;
     }
 
 
     public function doControl() {
         if($this->loginView->userWantsToLogOut()) {
             $this->loginModel->logOut();
-            $this->loginView->setMessage("Bye bye!");
+            $this->messageController->setMessage("Bye bye!");
         } else if ($this->loginView->userTriedToLogin()) {
-            $this->loginView->tryLogIn();
+            try {
+                $this->loginView->tryLogIn();
+            } catch (\Exception $e) {
+                $this->messageController->setMesssage($e->getMessage());
+            }
         }
+    }
 
-        if ($this->loginModel->isLoggedIn()) {
-            $this->layoutView->render(true, $this->loginView, $this->dateTimeView);
-        } else {
-            $this->layoutView->render(false, $this->loginView, $this->dateTimeView);
-        }
-
+    public function userLoginCheck() {
+        return $this->loginModel->isLoggedIn();
     }
 
 }

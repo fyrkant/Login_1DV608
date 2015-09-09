@@ -13,16 +13,20 @@ class LoginView
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
 
-    private $model;
+    private $loginModel;
+    private $messageModel;
     private $message;
 
     /**
      * LoginView constructor.
-     * @param $model
+     * @param \model\LoginModel $login
+     * @param \model\MessageModel $message
+     * @internal param $model
      */
-    public function __construct(\model\LoginModel $model)
+    public function __construct(\model\LoginModel $login, \model\MessageModel $message)
     {
-        $this->model = $model;
+        $this->loginModel = $login;
+        $this->messageModel = $message;
     }
 
 
@@ -35,12 +39,14 @@ class LoginView
 	 */
 	public function response() {
 
+        $message = $this->messageModel->getSessionMessage();
+
         $response = "";
 
-        if ($this->model->isLoggedIn()) {
-            $response .= $this->generateLogoutButtonHTML($this->message);
+        if ($this->loginModel->isLoggedIn()) {
+            $response = $this->generateLogoutButtonHTML($message);
         } else {
-            $response = $this->generateLoginFormHTML($this->message);
+            $response = $this->generateLoginFormHTML($message);
         }
 
 		return $response;
@@ -68,10 +74,6 @@ class LoginView
 	private function generateLoginFormHTML($message) {
 
 		$name = $this->getInput(self::$name);
-
-//        if ($this->userTriedToLogin()) {
-//            echo "You tried to log in.";
-//        }
 
 		return '
 			<form method="post" > 
@@ -119,14 +121,15 @@ class LoginView
 
         $name = $this->getInput(self::$name);
         $password = $this->getInput(self::$password);
-        $keepLogged = $this->getInput(self::$keep);
+        //$keepLogged = $this->getInput(self::$keep);
 
-        try {
-            $this->model->logIn($name, $password);
-            $this->message = "Welcome";
-        } catch (\Exception $e) {
-            $this->message = $e->getMessage();
-        }
+        $this->loginModel->logIn($name, $password);
+
+//        try {
+//            $this->message = "Welcome";
+//        } catch (\Exception $e) {
+//            $this->message = $e->getMessage();
+//        }
 
     }
 

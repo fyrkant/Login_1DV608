@@ -45,7 +45,7 @@ class LoginModel
         if ($username === $this->name && $password === $this->password) {
             $_SESSION[self::$loginSessionLocation] = true;
         } else if ($username == "" && $password == "") {
-            throw new \Exception("Username missing");
+            throw new \Exception("Username is missing");
         } else if ($password == "") {
             throw new \Exception("Password is missing");
         } else if ($username == "") {

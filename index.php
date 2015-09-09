@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 //INCLUDE THE FILES NEEDED...
 require_once('model/DateTimeModel.php');
 require_once('model/LoginModel.php');

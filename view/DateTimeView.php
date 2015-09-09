@@ -2,17 +2,18 @@
 
 namespace view;
 
-class DateTimeView {
+class DateTimeView
+{
 
-	private $dateTimeController;
+	private $model;
 
-	public function __construct(\controller\DateTimeController $dateTimeController) {
-        $this->dateTimeController = $dateTimeController;
+	public function __construct(\model\DateTimeModel $model) {
+        $this->model = $model;
 	}
 
 	public function getHTML() {
 
-        return '<p>' . $this->dateTimeController->getFormatted() . '</p>';
+        return '<p>' . $this->model->getFormatted() . '</p>';
 
 	}
 }

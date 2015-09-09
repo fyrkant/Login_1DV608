@@ -22,12 +22,13 @@ class MessageController
         $this->model = $model;
     }
 
-    public function setMesssage($message) {
+    public function setMessage($message) {
         $this->model->setSessionMessage($message);
     }
 
     public function getMessage() {
-        return $this->model->getSessionMessage();
+        $message = $this->model->getSessionMessage();
+        return $message;
     }
 
 

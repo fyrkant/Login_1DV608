@@ -11,9 +11,7 @@ require_once('view/DateTimeView.php');
 require_once('view/LoginView.php');
 require_once('view/LayoutViewView.php');
 
-require_once('controller/DateTimeController.php');
 require_once('controller/LoginController.php');
-require_once('controller/MainController.php');
 require_once('controller/MessageController.php');
 
 //MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
@@ -29,15 +27,12 @@ $messageController = new controller\MessageController($messageModel);
 $loginModel = new model\LoginModel();
 $loginView = new view\LoginView($loginModel, $messageModel);
 
-$mainController = new controller\MainController($loginModel, $loginView, $messageController);
+$loginController = new controller\LoginController($loginModel, $loginView, $messageController);
 
-$mainController->doControl();
-$loggedIn = $mainController->userLoginCheck();
+$loginController->doControl();
+$loggedIn = $loginController->userLoginCheck();
 
 $layoutView = new view\LayoutView();
 
 $layoutView->render($loggedIn, $loginView, $dateTimeView);
-
-
-//$mainController->doControl();
 

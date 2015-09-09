@@ -15,7 +15,6 @@ class LoginView
 
     private $loginModel;
     private $messageModel;
-    private $message;
 
     /**
      * LoginView constructor.
@@ -39,7 +38,18 @@ class LoginView
 	 */
 	public function response() {
 
-        $message = $this->messageModel->getSessionMessage();
+        $message = "";
+
+        if ($this->messageModel->messageExists()) {
+            $message = $this->messageModel->getSessionMessage();
+            $this->messageModel->emptySessionMessage();
+        }
+
+
+//        if ($this->messageModel->getSessionMessage() != "") {
+//            $message = $this->messageModel->getSessionMessage();
+//            $this->messageModel->emptySessionMessage();
+//        }
 
         $response = "";
 
@@ -48,6 +58,7 @@ class LoginView
         } else {
             $response = $this->generateLoginFormHTML($message);
         }
+
 
 		return $response;
 	}
@@ -95,11 +106,6 @@ class LoginView
 			</form>
 		';
 	}
-	
-	//CREATE GET-FUNCTIONS TO FETCH REQUEST VARIABLES
-	private function getRequestUserName() {
-		//RETURN REQUEST VARIABLE: USERNAME
-	}
 
 	private function getInput($name) {
 		if ( ! isset($_POST[$name])) {
@@ -117,20 +123,16 @@ class LoginView
         }
     }
 
-    public function tryLogin() {
-
+    public function getNameInput() {
         $name = $this->getInput(self::$name);
+
+        return $name;
+    }
+
+    public function getPasswordInput() {
         $password = $this->getInput(self::$password);
-        //$keepLogged = $this->getInput(self::$keep);
 
-        $this->loginModel->logIn($name, $password);
-
-//        try {
-//            $this->message = "Welcome";
-//        } catch (\Exception $e) {
-//            $this->message = $e->getMessage();
-//        }
-
+        return $password;
     }
 
     public function userWantsToLogOut() {
@@ -140,16 +142,4 @@ class LoginView
             return false;
         }
     }
-
-    /**
-     * @param mixed $message
-     */
-    public function setMessage($message)
-    {
-        $this->message = $message;
-    }
-
-
-
-	
 }

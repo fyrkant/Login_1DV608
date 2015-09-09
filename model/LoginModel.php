@@ -17,12 +17,6 @@ class LoginModel
 
     private static $loginSessionLocation = "LoginModel::LoggedIn";
 
-    public function __construct()
-    {
-        //$_SESSION[self::$loginSessionLocation] = true;
-    }
-
-
     public function isLoggedIn() {
         if ( ! isset($_SESSION[self::$loginSessionLocation])) {
             $_SESSION[self::$loginSessionLocation] = false;
@@ -38,6 +32,10 @@ class LoginModel
 
     public function logOut() {
         $_SESSION[self::$loginSessionLocation] = false;
+    }
+
+    public function loggedIn() {
+        $_SESSION[self::$loginSessionLocation] = true;
     }
 
     public function logIn($username, $password) {

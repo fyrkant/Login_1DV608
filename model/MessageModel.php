@@ -13,21 +13,28 @@ class MessageModel
 {
     private static $messageSessionLocation = "MessageModel::Message";
 
-    public function __construct() {
-        $_SESSION[self::$messageSessionLocation] = null;
-    }
-
     public function setSessionMessage($message) {
         $_SESSION[self::$messageSessionLocation] = $message;
     }
 
     public function getSessionMessage() {
-        if (isset($_SESSION[self::$messageSessionLocation]) && $_SESSION[self::$messageSessionLocation] != "") {
-            return $_SESSION[self::$messageSessionLocation];
+        if (isset($_SESSION[self::$messageSessionLocation])) {
+            $message = $_SESSION[self::$messageSessionLocation];
+            return $message;
         } else {
             return "";
         }
     }
 
+    public function emptySessionMessage() {
+        $_SESSION[self::$messageSessionLocation] = null;
+    }
 
+    public function messageExists() {
+        if (isset($_SESSION[self::$messageSessionLocation])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

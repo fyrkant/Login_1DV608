@@ -123,6 +123,7 @@ class LoginView
 
         try {
             $this->model->logIn($name, $password);
+            $this->message = "Welcome";
         } catch (\Exception $e) {
             $this->message = $e->getMessage();
         }

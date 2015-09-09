@@ -8,8 +8,8 @@ class LoginView
 	private static $logout = 'LoginView::Logout';
 	private static $name = 'LoginView::UserName';
 	private static $password = 'LoginView::Password';
-	private static $cookieName = 'LoginView::CookieName';
-	private static $cookiePassword = 'LoginView::CookiePassword';
+	//private static $cookieName = 'LoginView::CookieName';
+	//private static $cookiePassword = 'LoginView::CookiePassword';
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
 
@@ -38,20 +38,9 @@ class LoginView
 	 */
 	public function response() {
 
-        $message = "";
+        $message = $this->messageModel->getSessionMessage();
 
-        if ($this->messageModel->messageExists()) {
-            $message = $this->messageModel->getSessionMessage();
-            $this->messageModel->emptySessionMessage();
-        }
-
-
-//        if ($this->messageModel->getSessionMessage() != "") {
-//            $message = $this->messageModel->getSessionMessage();
-//            $this->messageModel->emptySessionMessage();
-//        }
-
-        $response = "";
+        $response = null;
 
         if ($this->loginModel->isLoggedIn()) {
             $response = $this->generateLogoutButtonHTML($message);
@@ -59,14 +48,13 @@ class LoginView
             $response = $this->generateLoginFormHTML($message);
         }
 
-
 		return $response;
 	}
 
 	/**
 	* Generate HTML code on the output buffer for the logout button
 	* @param $message, String output message
-	* @return  void, BUT writes to standard output!
+	* @return  string html, BUT writes to standard output!
 	*/
 	private function generateLogoutButtonHTML($message) {
 		return '
@@ -80,7 +68,7 @@ class LoginView
 	/**
 	* Generate HTML code on the output buffer for the logout button
 	* @param $message, String output message
-	* @return  void, BUT writes to standard output!
+	* @return  string html, BUT writes to standard output!
 	*/
 	private function generateLoginFormHTML($message) {
 
@@ -107,7 +95,11 @@ class LoginView
 		';
 	}
 
-	private function getInput($name) {
+    /**
+     * @param $name
+     * @return mixed|string
+     */
+    private function getInput($name) {
 		if ( ! isset($_POST[$name])) {
 			return "";
 		} else {

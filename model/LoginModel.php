@@ -34,22 +34,23 @@ class LoginModel
         $_SESSION[self::$loginSessionLocation] = false;
     }
 
-    public function loggedIn() {
-        $_SESSION[self::$loginSessionLocation] = true;
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
-    public function logIn($username, $password) {
+    /**
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
 
-        if ($username === $this->name && $password === $this->password) {
-            $_SESSION[self::$loginSessionLocation] = true;
-        } else if ($username == "" && $password == "") {
-            throw new \Exception("Username is missing");
-        } else if ($password == "") {
-            throw new \Exception("Password is missing");
-        } else if ($username == "") {
-            throw new \Exception("Username is missing");
-        } else {
-            throw new \Exception("Wrong name or password");
-        }
+    public function logIn() {
+        $_SESSION[self::$loginSessionLocation] = true;
     }
 }

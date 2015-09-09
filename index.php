@@ -2,15 +2,17 @@
 
 session_start();
 
-//INCLUDE THE FILES NEEDED...
+// Models
 require_once('model/DateTimeModel.php');
 require_once('model/LoginModel.php');
 require_once('model/MessageModel.php');
 
+// Views
 require_once('view/DateTimeView.php');
 require_once('view/LoginView.php');
-require_once('view/LayoutViewView.php');
+require_once('view/LayoutView.php');
 
+// Controllers
 require_once('controller/LoginController.php');
 require_once('controller/MessageController.php');
 
@@ -30,7 +32,7 @@ $loginView = new view\LoginView($loginModel, $messageModel);
 $loginController = new controller\LoginController($loginModel, $loginView, $messageController);
 
 $loginController->doControl();
-$loggedIn = $loginController->userLoginCheck();
+$loggedIn = $loginController->userLoggedInCheck();
 
 $layoutView = new view\LayoutView();
 

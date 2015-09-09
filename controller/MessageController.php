@@ -26,10 +26,4 @@ class MessageController
         $this->model->setSessionMessage($message);
     }
 
-    public function getMessage() {
-        $message = $this->model->getSessionMessage();
-        return $message;
-    }
-
-
 }

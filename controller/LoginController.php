@@ -46,24 +46,46 @@ class LoginController
 
     public function doControl() {
 
-        if($this->loginView->userWantsToLogOut()) {
+        if ($this->loginView->userWantsToLogOut()) {
             $this->loginModel->logOut();
             $this->messageController->setMessage("Bye bye!");
+            $this->redirect();
         } else if ($this->loginView->userTriedToLogin()) {
 
             $username = $this->loginView->getNameInput();
             $password = $this->loginView->getPasswordInput();
 
             try {
-                $this->loginModel->logIn($username, $password);
+                $this->logIn($username, $password);
                 $this->messageController->setMessage("Welcome");
+                $this->redirect();
             } catch (\Exception $e) {
                 $this->messageController->setMessage($e->getMessage());
             }
         }
     }
 
-    public function userLoginCheck() {
+    public function userLoggedInCheck() {
         return $this->loginModel->isLoggedIn();
+    }
+
+    public function logIn($username, $password) {
+
+        if ($username === $this->loginModel->getName() && $password === $this->loginModel->getPassword()) {
+            $this->loginModel->logIn();
+        } else if ($username == "" && $password == "") {
+            throw new \Exception("Username is missing");
+        } else if ($password == "") {
+            throw new \Exception("Password is missing");
+        } else if ($username == "") {
+            throw new \Exception("Username is missing");
+        } else {
+            throw new \Exception("Wrong name or password");
+        }
+
+    }
+
+    public function redirect() {
+        header("Location: " . $_SERVER['REQUEST_URI']);
     }
 }

@@ -46,11 +46,11 @@ class LoginController
 
     public function doControl() {
 
-        if ($this->loginView->userWantsToLogOut()) {
+        if ($this->loginView->userWantsToLogOut() && $this->userLoggedInCheck()) {
             $this->loginModel->logOut();
             $this->messageController->setMessage("Bye bye!");
             $this->redirect();
-        } else if ($this->loginView->userTriedToLogin()) {
+        } else if ($this->loginView->userTriedToLogin() && !$this->userLoggedInCheck()) {
 
             $username = $this->loginView->getNameInput();
             $password = $this->loginView->getPasswordInput();

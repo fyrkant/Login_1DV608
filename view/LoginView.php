@@ -124,7 +124,7 @@ class LoginView
         try {
             $this->model->logIn($name, $password);
         } catch (\Exception $e) {
-            echo $e->getMessage();
+            $this->message = $e->getMessage();
         }
 
     }

@@ -15,7 +15,8 @@ class DateTimeModel
     /**
      * @return string
      */
-    public function getFormatted() {
+    public function getFormatted()
+    {
 
         $day = date_format($this->now, "l");
         $date = date_format($this->now, "jS");

@@ -22,7 +22,8 @@ class MessageController
         $this->model = $model;
     }
 
-    public function setMessage($message) {
+    public function setMessage($message)
+    {
         $this->model->setSessionMessage($message);
     }
 

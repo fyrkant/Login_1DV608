@@ -38,7 +38,8 @@ class LoginController
     }
 
 
-    public function doControl() {
+    public function doControl()
+    {
 
         $isUserLoggedIn = $this->userLoggedInCheck();
 
@@ -48,7 +49,7 @@ class LoginController
             $this->messageController->setMessage("Bye bye!");
             $this->redirect();
 
-        } else if ($this->loginView->userTriedToLogin() && ! $isUserLoggedIn) {
+        } else if ($this->loginView->userTriedToLogin() && !$isUserLoggedIn) {
 
             $username = $this->loginView->getNameInput();
             $password = $this->loginView->getPasswordInput();
@@ -63,11 +64,19 @@ class LoginController
         }
     }
 
-    public function userLoggedInCheck() {
+    public function userLoggedInCheck()
+    {
         return $this->loginModel->isLoggedIn();
     }
 
-    public function logIn($username, $password) {
+    public function redirect()
+    {
+        header("Location: " . $_SERVER['REQUEST_URI']);
+        die();
+    }
+
+    public function logIn($username, $password)
+    {
 
         if ($username === $this->loginModel->getName() && $password === $this->loginModel->getPassword()) {
             $this->loginModel->logIn();
@@ -81,10 +90,5 @@ class LoginController
             throw new \Exception("Wrong name or password");
         }
 
-    }
-
-    public function redirect() {
-        header("Location: " . $_SERVER['REQUEST_URI']);
-        die();
     }
 }

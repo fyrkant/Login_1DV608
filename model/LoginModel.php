@@ -12,13 +12,13 @@ namespace model;
 class LoginModel
 {
 
+    private static $loginSessionLocation = "LoginModel::LoggedIn";
     private $name = "Admin";
     private $password = "Password";
 
-    private static $loginSessionLocation = "LoginModel::LoggedIn";
-
-    public function isLoggedIn() {
-        if ( ! isset($_SESSION[self::$loginSessionLocation])) {
+    public function isLoggedIn()
+    {
+        if (!isset($_SESSION[self::$loginSessionLocation])) {
             $_SESSION[self::$loginSessionLocation] = false;
 
             return false;
@@ -30,7 +30,8 @@ class LoginModel
         }
     }
 
-    public function logOut() {
+    public function logOut()
+    {
         $_SESSION[self::$loginSessionLocation] = false;
     }
 
@@ -50,7 +51,8 @@ class LoginModel
         return $this->password;
     }
 
-    public function logIn() {
+    public function logIn()
+    {
         $_SESSION[self::$loginSessionLocation] = true;
     }
 }

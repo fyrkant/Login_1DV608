@@ -15,27 +15,32 @@ class MessageModel
 
     private $message;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->message = null;
     }
 
-    public function setSessionMessage($message) {
+    public function setSessionMessage($message)
+    {
         $this->message = $message;
         $_SESSION[self::$messageSessionLocation] = $message;
     }
 
-    public function getSessionMessage() {
+    public function getSessionMessage()
+    {
         $message = isset($_SESSION[self::$messageSessionLocation]) ? $_SESSION[self::$messageSessionLocation] : null;
         if (!empty($message))
             $this->emptySessionMessage();
         return $message;
     }
 
-    public function emptySessionMessage() {
+    public function emptySessionMessage()
+    {
         unset($_SESSION[self::$messageSessionLocation]);
     }
 
-    public function messageExists() {
+    public function messageExists()
+    {
         if (isset($_SESSION[self::$messageSessionLocation])) {
             return true;
         } else {

@@ -4,14 +4,14 @@ namespace view;
 
 class LoginView
 {
-	private static $login = 'LoginView::Login';
-	private static $logout = 'LoginView::Logout';
-	private static $name = 'LoginView::UserName';
-	private static $password = 'LoginView::Password';
-	//private static $cookieName = 'LoginView::CookieName';
-	//private static $cookiePassword = 'LoginView::CookiePassword';
-	private static $keep = 'LoginView::KeepMeLoggedIn';
-	private static $messageId = 'LoginView::Message';
+    private static $login = 'LoginView::Login';
+    private static $logout = 'LoginView::Logout';
+    private static $name = 'LoginView::UserName';
+    private static $password = 'LoginView::Password';
+    //private static $cookieName = 'LoginView::CookieName';
+    //private static $cookiePassword = 'LoginView::CookiePassword';
+    private static $keep = 'LoginView::KeepMeLoggedIn';
+    private static $messageId = 'LoginView::Message';
 
     private $loginModel;
     private $messageModel;
@@ -30,13 +30,14 @@ class LoginView
 
 
     /**
-	 * Create HTTP response
-	 *
-	 * Should be called after a login attempt has been determined
-	 *
-	 * @return  string html BUT writes to standard output and cookies!
-	 */
-	public function response() {
+     * Create HTTP response
+     *
+     * Should be called after a login attempt has been determined
+     *
+     * @return  string html BUT writes to standard output and cookies!
+     */
+    public function response()
+    {
 
         $message = $this->messageModel->getSessionMessage();
 
@@ -48,33 +49,35 @@ class LoginView
             $response = $this->generateLoginFormHTML($message);
         }
 
-		return $response;
-	}
+        return $response;
+    }
 
-	/**
-	* Generate HTML code on the output buffer for the logout button
-	* @param $message, String output message
-	* @return  string html, BUT writes to standard output!
-	*/
-	private function generateLogoutButtonHTML($message) {
-		return '
+    /**
+     * Generate HTML code on the output buffer for the logout button
+     * @param $message , String output message
+     * @return  string html, BUT writes to standard output!
+     */
+    private function generateLogoutButtonHTML($message)
+    {
+        return '
 			<form  method="post" >
-				<p id="' . self::$messageId . '">' . $message .'</p>
+				<p id="' . self::$messageId . '">' . $message . '</p>
 				<input type="submit" name="' . self::$logout . '" value="logout"/>
 			</form>
 		';
-	}
-	
-	/**
-	* Generate HTML code on the output buffer for the logout button
-	* @param $message, String output message
-	* @return  string html, BUT writes to standard output!
-	*/
-	private function generateLoginFormHTML($message) {
+    }
 
-		$name = $this->getInput(self::$name);
+    /**
+     * Generate HTML code on the output buffer for the logout button
+     * @param $message , String output message
+     * @return  string html, BUT writes to standard output!
+     */
+    private function generateLoginFormHTML($message)
+    {
 
-		return '
+        $name = $this->getInput(self::$name);
+
+        return '
 			<form method="post" > 
 				<fieldset>
 					<legend>Login - enter Username and password</legend>
@@ -93,21 +96,23 @@ class LoginView
 				</fieldset>
 			</form>
 		';
-	}
+    }
 
     /**
      * @param $name
      * @return mixed|string
      */
-    private function getInput($name) {
-		if ( ! isset($_POST[$name])) {
-			return "";
-		} else {
-			return filter_var(trim($_POST[$name]), FILTER_SANITIZE_STRING);
-		}
-	}
+    private function getInput($name)
+    {
+        if (!isset($_POST[$name])) {
+            return "";
+        } else {
+            return filter_var(trim($_POST[$name]), FILTER_SANITIZE_STRING);
+        }
+    }
 
-    public function userTriedToLogin() {
+    public function userTriedToLogin()
+    {
         if (isset($_POST[self::$login])) {
             return true;
         } else {
@@ -115,19 +120,22 @@ class LoginView
         }
     }
 
-    public function getNameInput() {
+    public function getNameInput()
+    {
         $name = $this->getInput(self::$name);
 
         return $name;
     }
 
-    public function getPasswordInput() {
+    public function getPasswordInput()
+    {
         $password = $this->getInput(self::$password);
 
         return $password;
     }
 
-    public function userWantsToLogOut() {
+    public function userWantsToLogOut()
+    {
         if (isset($_POST[self::$logout])) {
             return true;
         } else {

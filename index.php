@@ -16,12 +16,14 @@ require_once('view/LayoutView.php');
 require_once('controller/LoginController.php');
 require_once('controller/MessageController.php');
 
-//MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
+// MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 
+// Initiate models
 
-$dateTimeView = new view\DateTimeView(new \model\DateTimeModel());
+$dateTimeModel = new \model\DateTimeModel();
+$dateTimeView = new view\DateTimeView($dateTimeModel);
 
 $messageModel = new model\MessageModel();
 $messageController = new controller\MessageController($messageModel);

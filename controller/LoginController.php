@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: fyrkant
- * Date: 2015-09-09
- * Time: 10:51
- */
 
 namespace controller;
 
@@ -46,11 +40,15 @@ class LoginController
 
     public function doControl() {
 
-        if ($this->loginView->userWantsToLogOut() && $this->userLoggedInCheck()) {
+        $isUserLoggedIn = $this->userLoggedInCheck();
+
+        if ($this->loginView->userWantsToLogOut() && $isUserLoggedIn) {
+
             $this->loginModel->logOut();
             $this->messageController->setMessage("Bye bye!");
             $this->redirect();
-        } else if ($this->loginView->userTriedToLogin() && !$this->userLoggedInCheck()) {
+
+        } else if ($this->loginView->userTriedToLogin() && ! $isUserLoggedIn) {
 
             $username = $this->loginView->getNameInput();
             $password = $this->loginView->getPasswordInput();
@@ -87,5 +85,6 @@ class LoginController
 
     public function redirect() {
         header("Location: " . $_SERVER['REQUEST_URI']);
+        die();
     }
 }

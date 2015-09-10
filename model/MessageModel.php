@@ -25,15 +25,10 @@ class MessageModel
     }
 
     public function getSessionMessage() {
-        if ($this->message == null) {
-            $message = isset($_SESSION[self::$messageSessionLocation]) ? $_SESSION[self::$messageSessionLocation] : null;
-            if (isset($_SESSION[self::$messageSessionLocation]))
-                $this->emptySessionMessage();
-            return $message;
-        } else if ($this->message != null) {
-            $message = $this->message;
-            return $message;
-        }
+        $message = isset($_SESSION[self::$messageSessionLocation]) ? $_SESSION[self::$messageSessionLocation] : null;
+        if (!empty($message))
+            $this->emptySessionMessage();
+        return $message;
     }
 
     public function emptySessionMessage() {

@@ -16,25 +16,6 @@ class LoginModel
     private $name = "Admin";
     private $password = "Password";
 
-    public function isLoggedIn()
-    {
-        if (!isset($_SESSION[self::$loginSessionLocation])) {
-            $_SESSION[self::$loginSessionLocation] = false;
-
-            return false;
-        } else {
-
-            $isLoggedIn = $_SESSION[self::$loginSessionLocation];
-
-            return $isLoggedIn;
-        }
-    }
-
-    public function logOut()
-    {
-        $_SESSION[self::$loginSessionLocation] = false;
-    }
-
     /**
      * @return string
      */
@@ -51,8 +32,27 @@ class LoginModel
         return $this->password;
     }
 
+    public function isLoggedIn()
+    {
+        if (!isset($_SESSION[ self::$loginSessionLocation ])) {
+            $_SESSION[ self::$loginSessionLocation ] = false;
+
+            return false;
+        } else {
+
+            $isLoggedIn = $_SESSION[ self::$loginSessionLocation ];
+
+            return $isLoggedIn;
+        }
+    }
+
+    public function logOut()
+    {
+        $_SESSION[ self::$loginSessionLocation ] = false;
+    }
+
     public function logIn()
     {
-        $_SESSION[self::$loginSessionLocation] = true;
+        $_SESSION[ self::$loginSessionLocation ] = true;
     }
 }

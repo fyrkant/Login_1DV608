@@ -5,12 +5,14 @@ namespace controller;
 
 class LoginController
 {
+
     private $loginModel;
     private $loginView;
     private $messageController;
 
     /**
      * MainController constructor.
+     *
      * @param $loginModel
      * @param $loginView
      */
@@ -38,18 +40,21 @@ class LoginController
     }
 
 
+    /**
+     * Main login control, checks what the user wants to do and does it.
+     */
     public function doControl()
     {
 
         $isUserLoggedIn = $this->userLoggedInCheck();
 
-        if ($this->loginView->userWantsToLogOut() && $isUserLoggedIn) {
+        if ($isUserLoggedIn && $this->loginView->userWantsToLogOut()) {
 
             $this->loginModel->logOut();
             $this->messageController->setMessage("Bye bye!");
             $this->redirect();
 
-        } else if ($this->loginView->userTriedToLogin() && !$isUserLoggedIn) {
+        } else if (!$isUserLoggedIn && $this->loginView->userTriedToLogin()) {
 
             $username = $this->loginView->getNameInput();
             $password = $this->loginView->getPasswordInput();

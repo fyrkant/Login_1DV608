@@ -11,10 +11,12 @@ namespace controller;
 
 class MessageController
 {
+
     private $model;
 
     /**
      * MessageController constructor.
+     *
      * @param $model
      */
     public function __construct(\model\MessageModel $model)

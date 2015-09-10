@@ -16,7 +16,7 @@ class LayoutView
         </head>
         <body>
           <h1>Assignment 2</h1>
-          ' . $this->renderIsLoggedIn($isLoggedIn) . '
+          ' . ($isLoggedIn ? '<h2>Logged in</h2>' : '<h2>Not logged in</h2>') . '
           
           <div class="container">
               ' . $loginView->response() . '
@@ -26,14 +26,5 @@ class LayoutView
          </body>
       </html>
     ';
-    }
-
-    private function renderIsLoggedIn($isLoggedIn)
-    {
-        if ($isLoggedIn) {
-            return '<h2>Logged in</h2>';
-        } else {
-            return '<h2>Not logged in</h2>';
-        }
     }
 }

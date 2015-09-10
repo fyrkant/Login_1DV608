@@ -4,6 +4,7 @@ namespace view;
 
 class LoginView
 {
+
     private static $login = 'LoginView::Login';
     private static $logout = 'LoginView::Logout';
     private static $name = 'LoginView::UserName';
@@ -18,8 +19,10 @@ class LoginView
 
     /**
      * LoginView constructor.
+     *
      * @param \model\LoginModel $login
      * @param \model\MessageModel $message
+     *
      * @internal param $model
      */
     public function __construct(\model\LoginModel $login, \model\MessageModel $message)
@@ -54,7 +57,9 @@ class LoginView
 
     /**
      * Generate HTML code on the output buffer for the logout button
+     *
      * @param $message , String output message
+     *
      * @return  string html, BUT writes to standard output!
      */
     private function generateLogoutButtonHTML($message)
@@ -69,7 +74,9 @@ class LoginView
 
     /**
      * Generate HTML code on the output buffer for the logout button
+     *
      * @param $message , String output message
+     *
      * @return  string html, BUT writes to standard output!
      */
     private function generateLoginFormHTML($message)
@@ -100,20 +107,21 @@ class LoginView
 
     /**
      * @param $name
+     *
      * @return mixed|string
      */
     private function getInput($name)
     {
-        if (!isset($_POST[$name])) {
+        if (!isset($_POST[ $name ])) {
             return "";
         } else {
-            return filter_var(trim($_POST[$name]), FILTER_SANITIZE_STRING);
+            return filter_var(trim($_POST[ $name ]), FILTER_SANITIZE_STRING);
         }
     }
 
     public function userTriedToLogin()
     {
-        if (isset($_POST[self::$login])) {
+        if (isset($_POST[ self::$login ])) {
             return true;
         } else {
             return false;
@@ -136,7 +144,7 @@ class LoginView
 
     public function userWantsToLogOut()
     {
-        if (isset($_POST[self::$logout])) {
+        if (isset($_POST[ self::$logout ])) {
             return true;
         } else {
             return false;

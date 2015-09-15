@@ -67,7 +67,7 @@ class LoginController
                } else {
                    $this->loginView->clearCookies();
                    $this->loginModel->logOut();
-                   $this->messageController->setMessage("Wrong info in cookies");
+                   $this->messageController->setMessage("Wrong information in cookies");
                }
             }
 

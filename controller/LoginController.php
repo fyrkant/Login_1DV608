@@ -63,11 +63,11 @@ class LoginController
 
                if ($correctCookie === $cookiePassword) {
                    $this->loginModel->logIn(new \model\LoginModel("Admin", "Password"));
-                   $this->messageController->setMessage("Welcome back with cookies");
+                   $this->messageController->setMessage("Welcome back with cookie");
                } else {
                    $this->loginView->clearCookies();
                    $this->loginModel->logOut();
-                   $this->messageController->setMessage("Wrong information in cookie");
+                   $this->messageController->setMessage("Wrong information in cookies");
                }
             }
 

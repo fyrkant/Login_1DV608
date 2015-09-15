@@ -58,7 +58,7 @@ class LoginController
         } else if (!$userIsLoggedIn) {
 
             if ($this->loginView->userIsRemembered()) {
-                $correctCookie = file_get_contents("secretfile.txt");
+                $correctCookie = file_get_contents("./secret/secretfile.txt");
                 $cookiePassword = $this->loginView->getCookiePassword();
 
                if ($correctCookie === $cookiePassword) {

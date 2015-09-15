@@ -183,7 +183,15 @@ class LoginView
         $randomString = str_shuffle("1234567890abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZ");
         $cookieLife = (time() + 60 * 60 * 30);
 
-        file_put_contents("secretfile.txt", $randomString);
+        $dir = "secret";
+
+        if (!file_exists(dir)) {
+            mkdir($dir, 0744);
+        }
+
+        $filename = $dir . "/secretfile.txt";
+
+        file_put_contents($filename, $randomString);
 
         setcookie(self::$cookieName, "Admin", $cookieLife, "/");
         setcookie(self::$cookiePassword, $randomString, $cookieLife, "/");

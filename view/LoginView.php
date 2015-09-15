@@ -9,8 +9,8 @@ class LoginView
     private static $logout = 'LoginView::Logout';
     private static $name = 'LoginView::UserName';
     private static $password = 'LoginView::Password';
-    //private static $cookieName = 'LoginView::CookieName';
-    //private static $cookiePassword = 'LoginView::CookiePassword';
+    private static $cookieName = 'LoginView::CookieName';
+    private static $cookiePassword = 'LoginView::CookiePassword';
     private static $keep = 'LoginView::KeepMeLoggedIn';
     private static $messageId = 'LoginView::Message';
 
@@ -119,6 +119,9 @@ class LoginView
         }
     }
 
+    /**
+     * @return bool
+     */
     public function userTriedToLogin()
     {
         if (isset($_POST[ self::$login ])) {
@@ -128,20 +131,9 @@ class LoginView
         }
     }
 
-    public function getNameInput()
-    {
-        $name = $this->getInput(self::$name);
-
-        return $name;
-    }
-
-    public function getPasswordInput()
-    {
-        $password = $this->getInput(self::$password);
-
-        return $password;
-    }
-
+    /**
+     * @return bool
+     */
     public function userWantsToLogOut()
     {
         if (isset($_POST[ self::$logout ])) {
@@ -149,5 +141,60 @@ class LoginView
         } else {
             return false;
         }
+    }
+
+    public function redirect()
+    {
+        header("Location: " . $_SERVER['REQUEST_URI']);
+        die();
+    }
+
+    /**
+     * @return \model\LoginModel
+     */
+    public function getLoginAttempt()
+    {
+        $name = $this->getInput(self::$name);
+        $password = $this->getInput(self::$password);
+        $keep = $this->getInput(self::$keep);
+        $login = new \model\LoginModel($name, $password, $keep);
+
+        return $login;
+    }
+
+    public function userIsRemembered()
+    {
+        if (isset($_COOKIE[ self::$cookieName ])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function getCookiePassword()
+    {
+        $password = $_COOKIE[ self::$cookiePassword ];
+
+        return $password;
+    }
+
+    public function setLoginCookies()
+    {
+        $randomString = str_shuffle("1234567890abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZ");
+        $cookieLife = (time() + 60 * 60 * 30);
+
+        file_put_contents("secretfile.txt", $randomString);
+
+        setcookie(self::$cookieName, "Admin", $cookieLife, "/");
+        setcookie(self::$cookiePassword, $randomString, $cookieLife, "/");
+
+    }
+
+    public function clearCookies()
+    {
+        unset($_COOKIE[ self::$cookieName ]);
+        setcookie(self::$cookieName, null, -1, "/");
+        unset($_COOKIE[ self::$cookiePassword ]);
+        setcookie(self::$cookiePassword, null, -1, "/");
     }
 }

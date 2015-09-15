@@ -13,24 +13,22 @@ class LoginModel
 {
 
     private static $loginSessionLocation = "LoginModel::LoggedIn";
-    private $name = "Admin";
-    private $password = "Password";
+    private $name;
+    private $password;
+    private $keep;
 
     /**
-     * @return string
+     * @param string $name
+     * @param string $password
+     * @param bool|false $keep
      */
-    public function getName()
+    public function __construct($name = "Admin", $password = "Password", $keep = false)
     {
-        return $this->name;
+        $this->name = $name;
+        $this->password = $password;
+        $this->keep = $keep;
     }
 
-    /**
-     * @return string
-     */
-    public function getPassword()
-    {
-        return $this->password;
-    }
 
     public function isLoggedIn()
     {
@@ -51,8 +49,29 @@ class LoginModel
         $_SESSION[ self::$loginSessionLocation ] = false;
     }
 
-    public function logIn()
+    public function logIn(LoginModel $attempt = null)
     {
-        $_SESSION[ self::$loginSessionLocation ] = true;
+        if ($attempt === null) {
+            $_SESSION[ self::$loginSessionLocation ] = true;
+        } else if ($attempt->name === $this->name && $attempt->password === $this->password) {
+            $_SESSION[ self::$loginSessionLocation ] = true;
+        } else if ($attempt->name == "" && $attempt->password == "") {
+            throw new \Exception("Username is missing");
+        } else if ($attempt->password == "") {
+            throw new \Exception("Password is missing");
+        } else if ($attempt->username == "") {
+            throw new \Exception("Username is missing");
+        } else {
+            throw new \Exception("Wrong name or password");
+        }
     }
+
+    /**
+     * @return mixed
+     */
+    public function getKeep()
+    {
+        return $this->keep;
+    }
+
 }

@@ -46,25 +46,48 @@ class LoginController
     public function doControl()
     {
 
-        $isUserLoggedIn = $this->userLoggedInCheck();
+        $userIsLoggedIn = $this->userLoggedInCheck();
 
-        if ($isUserLoggedIn && $this->loginView->userWantsToLogOut()) {
+        if ($userIsLoggedIn && $this->loginView->userWantsToLogOut()) {
 
             $this->loginModel->logOut();
+            $this->loginView->clearCookies();
             $this->messageController->setMessage("Bye bye!");
-            $this->redirect();
+            $this->loginView->redirect();
 
-        } else if (!$isUserLoggedIn && $this->loginView->userTriedToLogin()) {
+        } else if (!$userIsLoggedIn) {
 
-            $username = $this->loginView->getNameInput();
-            $password = $this->loginView->getPasswordInput();
+            if ($this->loginView->userIsRemembered()) {
+                $correctCookie = file_get_contents("secretfile.txt");
+                $cookiePassword = $this->loginView->getCookiePassword();
 
-            try {
-                $this->logIn($username, $password);
-                $this->messageController->setMessage("Welcome");
-                $this->redirect();
-            } catch (\Exception $e) {
-                $this->messageController->setMessage($e->getMessage());
+               if ($correctCookie === $cookiePassword) {
+                   $this->loginModel->logIn();
+                   $this->messageController->setMessage("Welcome back with cookies");
+               } else {
+                   $this->loginView->clearCookies();
+                   $this->loginModel->logOut();
+                   $this->messageController->setMessage("Wrong info in cookies you bastard!");
+               }
+            }
+
+            if ($this->loginView->userTriedToLogin()) {
+
+                $loginAttempt = $this->loginView->getLoginAttempt();
+
+                try {
+                    $this->loginModel->logIn($loginAttempt);
+
+                    if ($loginAttempt->getKeep()) {
+                        $this->messageController->setMessage("Welcome and you will be remembered");
+                        $this->loginView->setLoginCookies();
+                    } else {
+                        $this->messageController->setMessage("Welcome");
+                    }
+                    $this->loginView->redirect();
+                } catch (\Exception $e) {
+                    $this->messageController->setMessage($e->getMessage());
+                }
             }
         }
     }
@@ -74,26 +97,6 @@ class LoginController
         return $this->loginModel->isLoggedIn();
     }
 
-    public function redirect()
-    {
-        header("Location: " . $_SERVER['REQUEST_URI']);
-        die();
-    }
 
-    public function logIn($username, $password)
-    {
 
-        if ($username === $this->loginModel->getName() && $password === $this->loginModel->getPassword()) {
-            $this->loginModel->logIn();
-        } else if ($username == "" && $password == "") {
-            throw new \Exception("Username is missing");
-        } else if ($password == "") {
-            throw new \Exception("Password is missing");
-        } else if ($username == "") {
-            throw new \Exception("Username is missing");
-        } else {
-            throw new \Exception("Wrong name or password");
-        }
-
-    }
 }

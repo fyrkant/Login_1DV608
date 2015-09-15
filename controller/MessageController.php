@@ -12,6 +12,9 @@ namespace controller;
 class MessageController
 {
 
+    /**
+     * @var \model\MessageModel
+     */
     private $model;
 
     /**
@@ -24,6 +27,9 @@ class MessageController
         $this->model = $model;
     }
 
+    /**
+     * @param string $message
+     */
     public function setMessage($message)
     {
         $this->model->setSessionMessage($message);

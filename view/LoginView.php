@@ -9,13 +9,8 @@ class LoginView
     private static $logout = 'LoginView::Logout';
     private static $name = 'LoginView::UserName';
     private static $password = 'LoginView::Password';
-    private static $cookieName = 'LoginView::CookieName';
-    private static $cookiePassword = 'LoginView::CookiePassword';
     private static $keep = 'LoginView::KeepMeLoggedIn';
     private static $messageId = 'LoginView::Message';
-
-    private static $directory = "secret";
-    private static $filename = "file.txt";
 
     private $loginModel;
     private $messageModel;
@@ -163,59 +158,5 @@ class LoginView
         $login = new \model\LoginModel($name, $password, $keep);
 
         return $login;
-    }
-
-    public function userIsRemembered()
-    {
-        if (isset($_COOKIE[ self::$cookieName ])) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function getCookiePassword()
-    {
-        $password = $_COOKIE[ self::$cookiePassword ];
-
-        return $password;
-    }
-
-    public function setLoginCookies()
-    {
-        $randomString = str_shuffle("1234567890abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZ");
-        $cookieLife = (time() + 60 * 60 * 30);
-
-        if (!file_exists(self::$directory)) {
-            mkdir(self::$directory, 0744);
-        }
-
-        $filename = self::$directory . "/" . self::$filename;
-
-        file_put_contents($filename, $randomString);
-
-        setcookie(self::$cookieName, "Admin", $cookieLife, "/");
-        setcookie(self::$cookiePassword, $randomString, $cookieLife, "/");
-
-    }
-
-    public function cookieIsOK() {
-        $correctCookie = file_get_contents(self::$directory . "/" . self::$filename);
-        $cookiePassword = $this->getCookiePassword();
-
-        if ($cookiePassword === $correctCookie) {
-            return true;
-        } else {
-            return false;
-        }
-
-    }
-
-    public function clearCookies()
-    {
-        unset($_COOKIE[ self::$cookieName ]);
-        setcookie(self::$cookieName, null, -1, "/");
-        unset($_COOKIE[ self::$cookiePassword ]);
-        setcookie(self::$cookiePassword, null, -1, "/");
     }
 }

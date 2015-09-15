@@ -11,6 +11,7 @@ require_once('model/MessageModel.php');
 require_once('view/DateTimeView.php');
 require_once('view/LoginView.php');
 require_once('view/LayoutView.php');
+require_once('view/CookieJar.php');
 
 // Controllers
 require_once('controller/LoginController.php');
@@ -31,7 +32,8 @@ $messageController = new controller\MessageController($messageModel);
 $loginModel = new model\LoginModel();
 $loginView = new view\LoginView($loginModel, $messageModel);
 
-$loginController = new controller\LoginController($loginModel, $loginView, $messageController);
+$cookieJar = new \view\CookieJar();
+$loginController = new controller\LoginController($loginModel, $loginView, $messageController, $cookieJar);
 
 $loginController->doControl();
 $loggedIn = $loginController->userLoggedInCheck();

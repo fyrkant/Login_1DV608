@@ -9,6 +9,7 @@ class LoginController
     private $loginModel;
     private $loginView;
     private $messageController;
+    private $cookieJar;
 
     /**
      * MainController constructor.
@@ -16,11 +17,15 @@ class LoginController
      * @param $loginModel
      * @param $loginView
      */
-    public function __construct(\model\LoginModel $loginModel, \view\LoginView $loginView, \controller\MessageController $messageController)
+    public function __construct(\model\LoginModel $loginModel,
+                                \view\LoginView $loginView,
+                                \controller\MessageController $messageController,
+                                \view\CookieJar $cookieJar)
     {
         $this->loginModel = $loginModel;
         $this->loginView = $loginView;
         $this->messageController = $messageController;
+        $this->cookieJar = $cookieJar;
     }
 
     /**
@@ -51,22 +56,22 @@ class LoginController
         if ($userIsLoggedIn && $this->loginView->userWantsToLogOut()) {
 
             $this->loginModel->logOut();
-            $this->loginView->clearCookies();
+            $this->cookieJar->clearCookies();
             $this->messageController->setMessage("Bye bye!");
             $this->loginView->redirect();
 
         } else if (!$userIsLoggedIn) {
 
-            if ($this->loginView->userIsRemembered()) {
+            if ($this->cookieJar->userIsRemembered()) {
 
-               if ($this->loginView->cookieIsOK()) {
-                   $this->loginModel->logIn(new \model\LoginModel("Admin", "Password"));
-                   $this->messageController->setMessage("Welcome back with cookie");
-               } else {
-                   $this->loginView->clearCookies();
-                   $this->loginModel->logOut();
-                   $this->messageController->setMessage("Wrong information in cookies");
-               }
+                if ($this->cookieJar->cookieIsOK()) {
+                    $this->loginModel->logIn(new \model\LoginModel("Admin", "Password"));
+                    $this->messageController->setMessage("Welcome back with cookie");
+                } else {
+                    $this->cookieJar->clearCookies();
+                    $this->loginModel->logOut();
+                    $this->messageController->setMessage("Wrong information in cookies");
+                }
             }
 
             if ($this->loginView->userTriedToLogin()) {
@@ -78,7 +83,7 @@ class LoginController
 
                     if ($loginAttempt->getKeep()) {
                         $this->messageController->setMessage("Welcome and you will be remembered");
-                        $this->loginView->setLoginCookies();
+                        $this->cookieJar->setLoginCookies();
                     } else {
                         $this->messageController->setMessage("Welcome");
                     }
@@ -94,7 +99,6 @@ class LoginController
     {
         return $this->loginModel->isLoggedIn();
     }
-
 
 
 }

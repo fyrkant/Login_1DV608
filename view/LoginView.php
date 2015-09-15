@@ -183,9 +183,9 @@ class LoginView
         $randomString = str_shuffle("1234567890abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZ");
         $cookieLife = (time() + 60 * 60 * 30);
 
-        $dir = "secret";
+        $dir = "/secret";
 
-        if (!file_exists(dir)) {
+        if (!file_exists($dir)) {
             mkdir($dir, 0744);
         }
 

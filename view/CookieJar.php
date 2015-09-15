@@ -14,9 +14,13 @@ class CookieJar
     public function userIsRemembered()
     {
         if (isset($_COOKIE[ self::$cookieName ])) {
+
             return true;
+
         } else {
+
             return false;
+            
         }
     }
 

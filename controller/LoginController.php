@@ -58,10 +58,8 @@ class LoginController
         } else if (!$userIsLoggedIn) {
 
             if ($this->loginView->userIsRemembered()) {
-                $correctCookie = file_get_contents("./secret/secretfile.txt");
-                $cookiePassword = $this->loginView->getCookiePassword();
 
-               if ($correctCookie === $cookiePassword) {
+               if ($this->loginView->cookieIsOK()) {
                    $this->loginModel->logIn(new \model\LoginModel("Admin", "Password"));
                    $this->messageController->setMessage("Welcome back with cookie");
                } else {

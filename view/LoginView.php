@@ -14,6 +14,9 @@ class LoginView
     private static $keep = 'LoginView::KeepMeLoggedIn';
     private static $messageId = 'LoginView::Message';
 
+    private static $directory = "secret";
+    private static $filename = "file.txt";
+
     private $loginModel;
     private $messageModel;
 
@@ -183,18 +186,28 @@ class LoginView
         $randomString = str_shuffle("1234567890abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZ");
         $cookieLife = (time() + 60 * 60 * 30);
 
-        $dir = "/secret";
-
-        if (!file_exists($dir)) {
-            mkdir($dir, 0744);
+        if (!file_exists(self::$directory)) {
+            mkdir(self::$directory, 0744);
         }
 
-        $filename = $dir . "/secretfile.txt";
+        $filename = self::$directory . "/" . self::$filename;
 
         file_put_contents($filename, $randomString);
 
         setcookie(self::$cookieName, "Admin", $cookieLife, "/");
         setcookie(self::$cookiePassword, $randomString, $cookieLife, "/");
+
+    }
+
+    public function cookieIsOK() {
+        $correctCookie = file_get_contents(self::$directory . "/" . self::$filename);
+        $cookiePassword = $this->getCookiePassword();
+
+        if ($cookiePassword === $correctCookie) {
+            return true;
+        } else {
+            return false;
+        }
 
     }
 

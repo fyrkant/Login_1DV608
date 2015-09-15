@@ -62,7 +62,7 @@ class LoginController
                 $cookiePassword = $this->loginView->getCookiePassword();
 
                if ($correctCookie === $cookiePassword) {
-                   $this->loginModel->logIn();
+                   $this->loginModel->logIn(new \model\LoginModel("Admin", "Password"));
                    $this->messageController->setMessage("Welcome back with cookies");
                } else {
                    $this->loginView->clearCookies();

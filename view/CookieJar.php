@@ -13,7 +13,6 @@ class CookieJar
 
     public function userIsRemembered()
     {
-//        var_dump($_SERVER);
         if (isset($_COOKIE[ self::$cookieName ])) {
             return true;
         } else {
@@ -80,7 +79,7 @@ class CookieJar
             $exploded = explode("_", $line);
 
             if ($exploded[0] === $ip) {
-                unset($fileArray[$key]);
+                unset($fileArray[ $key ]);
             }
         }
 

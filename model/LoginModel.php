@@ -49,7 +49,7 @@ class LoginModel
         $_SESSION[ self::$loginSessionLocation ] = false;
     }
 
-    public function logIn(LoginModel $attempt = null)
+    public function logIn(LoginModel $attempt)
     {
         if ($attempt === null) {
             $_SESSION[ self::$loginSessionLocation ] = true;
@@ -59,7 +59,7 @@ class LoginModel
             throw new \Exception("Username is missing");
         } else if ($attempt->password == "") {
             throw new \Exception("Password is missing");
-        } else if ($attempt->username == "") {
+        } else if ($attempt->name == "") {
             throw new \Exception("Username is missing");
         } else {
             throw new \Exception("Wrong name or password");

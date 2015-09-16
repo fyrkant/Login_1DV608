@@ -8,10 +8,9 @@ class CookieJar
     private static $cookieName = 'LoginView::CookieName';
     private static $cookiePassword = 'LoginView::CookiePassword';
 
-    private static $directory = "secret";
     private static $filename = "secret/file.txt";
 
-    public function userIsRemembered()
+    public function cookieExists()
     {
         if (isset($_COOKIE[ self::$cookieName ])) {
 
@@ -20,22 +19,16 @@ class CookieJar
         } else {
 
             return false;
-            
+
         }
     }
 
     public function setLoginCookies()
     {
         $randomString = str_shuffle("1234567890abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZ");
-        $cookieLife = (time() + 60 * 60 * 30);
+        $cookieLife = time() + (30 * 24 * 60 * 60);
 
-        if (!file_exists(self::$directory)) {
-            mkdir(self::$directory, 0744);
-        }
-
-        $ip = $_SERVER['REMOTE_ADDR'];
-
-        $stringToSave = $ip . "_" . $randomString . "_" . $cookieLife . "\n";
+        $stringToSave = $randomString . "_" . $cookieLife . "\n";
 
         file_put_contents(self::$filename, $stringToSave, FILE_APPEND);
 
@@ -48,16 +41,17 @@ class CookieJar
     {
         $cookiePassword = $this->getCookiePassword();
 
-        $fileArray = file(self::$filename);
-
-        $ip = $_SERVER['REMOTE_ADDR'];
-        $correctCookie = null;
         $now = time();
 
-        foreach ($fileArray as $line) {
+        $fileArray = file(self::$filename);
+
+        foreach ($fileArray as $key => $line) {
             $exploded = explode("_", $line);
 
-            if ($ip === $exploded[0] && $cookiePassword === $exploded[1] && $now < $exploded[2]) {
+            $correctPassword = $exploded[0];
+            $timeToDie = trim($exploded[1]);
+
+            if ($cookiePassword === $correctPassword && $now < $timeToDie) {
                 return true;
             }
         }
@@ -75,14 +69,17 @@ class CookieJar
 
     public function clearCookies()
     {
-        $ip = $_SERVER['REMOTE_ADDR'];
+        $cookieString = $_COOKIE[ self::$cookiePassword ];
 
         $fileArray = file(self::$filename);
 
         foreach ($fileArray as $key => $line) {
             $exploded = explode("_", $line);
 
-            if ($exploded[0] === $ip) {
+            $passwordString = $exploded[0];
+            $timeToDie = trim($exploded[1]);
+
+            if ($passwordString === $cookieString || $timeToDie < time()) {
                 unset($fileArray[ $key ]);
             }
         }
@@ -94,7 +91,6 @@ class CookieJar
         setcookie(self::$cookieName, null, -1, "/");
         unset($_COOKIE[ self::$cookiePassword ]);
         setcookie(self::$cookiePassword, null, -1, "/");
-
 
     }
 

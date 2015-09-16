@@ -66,6 +66,11 @@ class LoginModel
         }
     }
 
+    public function cookieLogin()
+    {
+        $_SESSION[ self::$loginSessionLocation ] = true;
+    }
+
     /**
      * @return mixed
      */

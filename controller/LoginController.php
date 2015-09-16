@@ -62,10 +62,10 @@ class LoginController
 
         } else if (!$userIsLoggedIn) {
 
-            if ($this->cookieJar->userIsRemembered()) {
+            if ($this->cookieJar->cookieExists()) {
 
                 if ($this->cookieJar->cookieIsOK()) {
-                    $this->loginModel->logIn(new \model\LoginModel("Admin", "Password"));
+                    $this->loginModel->cookieLogIn();
                     $this->messageController->setMessage("Welcome back with cookie");
                 } else {
                     $this->cookieJar->clearCookies();

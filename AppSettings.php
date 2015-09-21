@@ -1,6 +1,7 @@
 <?php
 
-class AppSettings {
+class AppSettings
+{
 
     const USERNAME = "Admin";
     const PASSWORD = "Password";

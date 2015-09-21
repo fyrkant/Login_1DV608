@@ -155,8 +155,9 @@ class LoginView
         $name = $this->getInput(self::$name);
         $password = $this->getInput(self::$password);
         $keep = $this->getInput(self::$keep);
-        $login = new \model\LoginModel($name, $password, $keep);
 
-        return $login;
+        $attempt = new \model\LoginAttemptModel($name, $password, $keep);
+
+        return $attempt;
     }
 }

@@ -8,8 +8,18 @@ class CookieJar
     private static $cookieName = 'LoginView::CookieName';
     private static $cookiePassword = 'LoginView::CookiePassword';
 
-    private static $filename = "secret/file.txt";
+    private static $filename = "file.txt";
 
+    private $dataPath;
+
+    public function __construct($dataPath)
+    {
+        $this->dataPath = $dataPath;
+    }
+
+    /**
+     * @return bool
+     */
     public function cookieExists()
     {
         if (isset($_COOKIE[ self::$cookieName ])) {
@@ -23,6 +33,7 @@ class CookieJar
         }
     }
 
+
     public function setLoginCookies()
     {
         $randomString = str_shuffle("1234567890abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZ");
@@ -30,20 +41,23 @@ class CookieJar
 
         $stringToSave = $randomString . "_" . $cookieLife . "\n";
 
-        file_put_contents(self::$filename, $stringToSave, FILE_APPEND);
+        file_put_contents($this->dataPath . self::$filename, $stringToSave, FILE_APPEND);
 
         setcookie(self::$cookieName, "Admin", $cookieLife, "/");
         setcookie(self::$cookiePassword, $randomString, $cookieLife, "/");
 
     }
 
+    /**
+     * @return bool
+     */
     public function cookieIsOK()
     {
         $cookiePassword = $this->getCookiePassword();
 
         $now = time();
 
-        $fileArray = file(self::$filename);
+        $fileArray = file($this->dataPath . self::$filename);
 
         foreach ($fileArray as $key => $line) {
             $exploded = explode("_", $line);
@@ -60,6 +74,9 @@ class CookieJar
 
     }
 
+    /**
+     * @return string Randomized password string from cookie
+     */
     public function getCookiePassword()
     {
         $password = $_COOKIE[ self::$cookiePassword ];
@@ -71,7 +88,7 @@ class CookieJar
     {
         $cookieString = $_COOKIE[ self::$cookiePassword ];
 
-        $fileArray = file(self::$filename);
+        $fileArray = file($this->dataPath . self::$filename);
 
         foreach ($fileArray as $key => $line) {
             $exploded = explode("_", $line);
@@ -85,7 +102,7 @@ class CookieJar
         }
 
         $fileArray = array_values($fileArray);
-        file_put_contents(self::$filename, implode($fileArray));
+        file_put_contents($this->dataPath . self::$filename, implode($fileArray));
 
         unset($_COOKIE[ self::$cookieName ]);
         setcookie(self::$cookieName, null, -1, "/");

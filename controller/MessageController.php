@@ -20,7 +20,7 @@ class MessageController
     /**
      * MessageController constructor.
      *
-     * @param $model
+     * @param \model\MessageModel $model
      */
     public function __construct(\model\MessageModel $model)
     {

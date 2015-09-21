@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: fyrkant
- * Date: 2015-09-09
- * Time: 06:50
- */
 
 namespace model;
 
@@ -15,6 +9,22 @@ class LoginModel
     private static $loginSessionLocation = "LoginModel::LoggedIn";
     private $name;
     private $password;
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
     private $keep;
 
     /**
@@ -22,7 +32,7 @@ class LoginModel
      * @param string $password
      * @param bool|false $keep
      */
-    public function __construct($name = "Admin", $password = "Password", $keep = false)
+    public function __construct($name, $password, $keep = false)
     {
         $this->name = $name;
         $this->password = $password;
@@ -30,6 +40,9 @@ class LoginModel
     }
 
 
+    /**
+     * @return bool
+     */
     public function isLoggedIn()
     {
         if (!isset($_SESSION[ self::$loginSessionLocation ])) {
@@ -49,21 +62,47 @@ class LoginModel
         $_SESSION[ self::$loginSessionLocation ] = false;
     }
 
-    public function logIn(LoginModel $attempt)
+    /**
+     * @param LoginModel $attempt
+     *
+     * @throws \Exception
+     */
+    public function logIn(LoginAttemptModel $attempt)
     {
-        if ($attempt === null) {
+        if ($attempt->getName() === $this->name && $this->verifyPassword($attempt->getPassword())) {
             $_SESSION[ self::$loginSessionLocation ] = true;
-        } else if ($attempt->name === $this->name && $attempt->password === $this->password) {
-            $_SESSION[ self::$loginSessionLocation ] = true;
-        } else if ($attempt->name == "" && $attempt->password == "") {
-            throw new \Exception("Username is missing");
-        } else if ($attempt->password == "") {
-            throw new \Exception("Password is missing");
-        } else if ($attempt->name == "") {
-            throw new \Exception("Username is missing");
+        } else if ($attempt->getName() == "" && $attempt->getPassword() == "") {
+            throw new \exceptions\UserNameEmptyException("Username is missing");
+        } else if ($attempt->getPassword() == "") {
+            throw new \exceptions\PasswordEmptyException("Password is missing");
+        } else if ($attempt->getName() == "") {
+            throw new \exceptions\UserNameEmptyException("Username is missing");
         } else {
-            throw new \Exception("Wrong name or password");
+            throw new \exceptions\IncorrectCredentialsException("Wrong name or password");
         }
+    }
+
+    public function verifyPassword($passwordToVerify)
+    {
+
+       if ($passwordToVerify === $this->password) {
+            return true;
+       } else {
+            return false;
+       }
+//        $fileArray = file("secret/supersecret.txt");
+//
+//        foreach ($fileArray as $line) {
+//            $exploded = explode("__", $line);
+//            $hashedUser = $exploded[0];
+//            $hashedPassword = trim($exploded[1]);
+//
+//            if ($username === $hashedUser) {
+//                return password_verify($passwordToVerify, $hashedPassword);
+//            }
+//        }
+//
+//        return false;
     }
 
     public function cookieLogin()
@@ -77,6 +116,19 @@ class LoginModel
     public function getKeep()
     {
         return $this->keep;
+    }
+
+    public function hashedSetter()
+    {
+
+        $username = "Admin";
+        $password = "Password";
+
+        $hashed = password_hash($password, PASSWORD_BCRYPT);
+
+        $toBeSaved = $username . "__" . $hashed . PHP_EOL;
+
+        file_put_contents("secret/supersecret.txt", $toBeSaved, FILE_APPEND);
     }
 
 }

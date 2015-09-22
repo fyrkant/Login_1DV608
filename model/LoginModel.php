@@ -47,13 +47,11 @@ class LoginModel
     {
         if (!isset($_SESSION[ self::$loginSessionLocation ])) {
             $_SESSION[ self::$loginSessionLocation ] = false;
-            session_regenerate_id(true);
 
             return false;
         } else {
 
             $isLoggedIn = $_SESSION[ self::$loginSessionLocation ];
-            session_regenerate_id(true);
 
             return $isLoggedIn;
         }
@@ -62,7 +60,6 @@ class LoginModel
     public function logOut()
     {
         $_SESSION[ self::$loginSessionLocation ] = false;
-        session_regenerate_id(true);
     }
 
     /**
@@ -74,7 +71,6 @@ class LoginModel
     {
         if ($attempt->getName() === $this->name && $this->verifyPassword($attempt->getPassword())) {
             $_SESSION[ self::$loginSessionLocation ] = true;
-            session_regenerate_id(true);
         } else if ($attempt->getName() == "" && $attempt->getPassword() == "") {
             throw new \exceptions\UserNameEmptyException("Username is missing");
         } else if ($attempt->getPassword() == "") {
@@ -112,7 +108,6 @@ class LoginModel
     public function cookieLogin()
     {
         $_SESSION[ self::$loginSessionLocation ] = true;
-        session_regenerate_id(true);
     }
 
     /**

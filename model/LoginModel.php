@@ -53,7 +53,9 @@ class LoginModel
 
             $isLoggedIn = $_SESSION[ self::$loginSessionLocation ];
 
-            session_regenerate_id(true);
+            if ($isLoggedIn) {
+                session_regenerate_id(true);
+            }
 
             return $isLoggedIn;
         }

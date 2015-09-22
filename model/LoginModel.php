@@ -45,15 +45,20 @@ class LoginModel
      */
     public function isLoggedIn()
     {
+
         if (!isset($_SESSION[ self::$loginSessionLocation ])) {
-            $_SESSION[ self::$loginSessionLocation ] = false;
+            $_SESSION[ self::$loginSessionLocation ] = [false, null];
 
             return false;
         } else {
 
             $isLoggedIn = $_SESSION[ self::$loginSessionLocation ];
 
-            return $isLoggedIn;
+            if ($_SERVER['HTTP_USER_AGENT'] !== $isLoggedIn[1]) {
+                return false;
+            }
+
+            return $isLoggedIn[0];
         }
     }
 
@@ -70,7 +75,10 @@ class LoginModel
     public function logIn(LoginAttemptModel $attempt)
     {
         if ($attempt->getName() === $this->name && $this->verifyPassword($attempt->getPassword())) {
-            $_SESSION[ self::$loginSessionLocation ] = true;
+
+            $array = [true, $_SERVER['HTTP_USER_AGENT']];
+
+            $_SESSION[ self::$loginSessionLocation ] = $array;
         } else if ($attempt->getName() == "" && $attempt->getPassword() == "") {
             throw new \exceptions\UserNameEmptyException("Username is missing");
         } else if ($attempt->getPassword() == "") {
@@ -107,7 +115,9 @@ class LoginModel
 
     public function cookieLogin()
     {
-        $_SESSION[ self::$loginSessionLocation ] = true;
+        $array = [true, $_SERVER['HTTP_USER_AGENT']];
+
+        $_SESSION[ self::$loginSessionLocation ] = $array;
     }
 
     /**

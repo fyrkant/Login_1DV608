@@ -8,7 +8,7 @@ class LoginController
 
     private $loginModel;
     private $loginView;
-    private $messageController;
+    private $messageModel;
     private $cookieJar;
 
     /**
@@ -16,17 +16,17 @@ class LoginController
      *
      * @param \model\LoginModel $loginModel
      * @param \view\LoginView $loginView
-     * @param MessageController $messageController
+     * @param \model\MessageModel $messageModel
      * @param \view\CookieJar $cookieJar
      */
     public function __construct(\model\LoginModel $loginModel,
                                 \view\LoginView $loginView,
-                                \controller\MessageController $messageController,
+                                \model\MessageModel $messageModel,
                                 \view\CookieJar $cookieJar)
     {
         $this->loginModel = $loginModel;
         $this->loginView = $loginView;
-        $this->messageController = $messageController;
+        $this->messageModel = $messageModel;
         $this->cookieJar = $cookieJar;
     }
 
@@ -64,7 +64,7 @@ class LoginController
     {
         $this->loginModel->logOut();
         $this->cookieJar->clearCookies();
-        $this->messageController->setMessage("Bye bye!");
+        $this->messageModel->setMessageKey("ByeBye");
         $this->loginView->redirect();
     }
 
@@ -77,11 +77,11 @@ class LoginController
     {
         if ($this->cookieJar->cookieIsOK()) {
             $this->loginModel->cookieLogIn();
-            $this->messageController->setMessage("Welcome back with cookie");
+            $this->messageModel->setMessageKey("CookieWelcome");
         } else {
             $this->cookieJar->clearCookies();
             $this->loginModel->logOut();
-            $this->messageController->setMessage("Wrong information in cookies");
+            $this->messageModel->setMessageKey("CookieError");
         }
     }
 
@@ -90,25 +90,29 @@ class LoginController
      * If provided username & password is correct
      * user is logged in, message is set and view redirects.
      * If user has checked "remember me" cookies will be saved.
-     * Exceptions thrown by model gets catched and messages
+     * Exceptions thrown by model gets caught and messages
      * sent to messageController.
      */
     private function tryLogin()
     {
-        $loginAttempt = $this->loginView->getLoginAttempt();
-
         try {
-            $this->loginModel->logIn($loginAttempt);
+            $attempt = $this->loginView->getLoginAttempt();
 
-            if ($loginAttempt->getKeep()) {
-                $this->messageController->setMessage("Welcome and you will be remembered");
-                $this->cookieJar->setLoginCookies();
+            $this->loginModel->logIn($attempt);
+
+            if ($attempt->getKeep()) {
+                $this->messageModel->setMessageKey("WelcomeRemember");
+                $this->cookieJar->setLoginCookies($this->loginModel->getName());
             } else {
-                $this->messageController->setMessage("Welcome");
+                $this->messageModel->setMessageKey("Welcome");
             }
             $this->loginView->redirect();
-        } catch (\Exception $e) {
-            $this->messageController->setMessage($e->getMessage());
+        } catch (\exceptions\UserNameEmptyException $e) {
+            $this->messageModel->setMessageKey("Username");
+        } catch (\exceptions\PasswordEmptyException $e) {
+            $this->messageModel->setMessageKey("Password");
+        } catch (\exceptions\IncorrectCredentialsException $e) {
+            $this->messageModel->setMessageKey("Credentials");
         }
     }
 

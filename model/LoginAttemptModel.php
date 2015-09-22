@@ -15,9 +15,21 @@ class LoginAttemptModel
      * @param string $password
      * @param bool|false $keep
      *
+     * @throws \exceptions\PasswordEmptyException
+     * @throws \exceptions\UserNameEmptyException
      */
     public function __construct($name, $password, $keep)
     {
+        if ($name == "" && $password == "") {
+            throw new \exceptions\UserNameEmptyException();
+        }
+        if ($password == "") {
+            throw new \exceptions\PasswordEmptyException();
+        }
+        if ($name == "") {
+            throw new \exceptions\UserNameEmptyException();
+        }
+
         $this->name = $name;
         $this->password = $password;
         $this->keep = $keep;

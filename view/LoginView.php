@@ -13,7 +13,7 @@ class LoginView
     private static $messageId = 'LoginView::Message';
 
     private $loginModel;
-    private $messageModel;
+    private $messageView;
 
     /**
      * LoginView constructor.
@@ -23,10 +23,10 @@ class LoginView
      *
      * @internal param $model
      */
-    public function __construct(\model\LoginModel $login, \model\MessageModel $message)
+    public function __construct(\model\LoginModel $login, \view\MessageView $message)
     {
         $this->loginModel = $login;
-        $this->messageModel = $message;
+        $this->messageView = $message;
     }
 
 
@@ -40,7 +40,7 @@ class LoginView
     public function response()
     {
 
-        $message = $this->messageModel->getSessionMessage();
+        $message = $this->messageView->getMessage();
 
         $response = null;
 
@@ -148,7 +148,7 @@ class LoginView
     }
 
     /**
-     * @return \model\LoginModel
+     * @return \model\LoginAttemptModel
      */
     public function getLoginAttempt()
     {

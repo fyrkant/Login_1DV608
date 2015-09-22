@@ -34,7 +34,10 @@ class CookieJar
     }
 
 
-    public function setLoginCookies()
+    /**
+     * @param $userName
+     */
+    public function setLoginCookies($userName)
     {
         $randomString = str_shuffle("1234567890abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZ");
         $cookieLife = time() + (30 * 24 * 60 * 60);
@@ -43,7 +46,7 @@ class CookieJar
 
         file_put_contents($this->dataPath . self::$filename, $stringToSave, FILE_APPEND);
 
-        setcookie(self::$cookieName, "Admin", $cookieLife, "/");
+        setcookie(self::$cookieName, $userName, $cookieLife, "/");
         setcookie(self::$cookiePassword, $randomString, $cookieLife, "/");
 
     }

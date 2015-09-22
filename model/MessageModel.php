@@ -11,15 +11,15 @@ class MessageModel
     /**
      * @param $message string
      */
-    public function setSessionMessage($message)
+    public function setMessageKey($key)
     {
-        $_SESSION[ self::$messageSessionLocation ] = $message;
+        $_SESSION[ self::$messageSessionLocation ] = $key;
     }
 
     /**
      * @return string|null
      */
-    public function getSessionMessage()
+    public function getMessageKey()
     {
         $message = isset($_SESSION[ self::$messageSessionLocation ]) ? $_SESSION[ self::$messageSessionLocation ] : null;
 

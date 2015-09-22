@@ -9,6 +9,19 @@ class LoginModel
     private static $loginSessionLocation = "LoginModel::LoggedIn";
     private $name;
     private $password;
+    private $keep;
+
+    /**
+     * @param string $name
+     * @param string $password
+     * @param bool|false $keep
+     */
+    public function __construct($name, $password, $keep = false)
+    {
+        $this->name = $name;
+        $this->password = $password;
+        $this->keep = $keep;
+    }
 
     /**
      * @return string
@@ -25,20 +38,6 @@ class LoginModel
     {
         return $this->password;
     }
-    private $keep;
-
-    /**
-     * @param string $name
-     * @param string $password
-     * @param bool|false $keep
-     */
-    public function __construct($name, $password, $keep = false)
-    {
-        $this->name = $name;
-        $this->password = $password;
-        $this->keep = $keep;
-    }
-
 
     /**
      * @return bool
@@ -47,57 +46,59 @@ class LoginModel
     {
 
         if (!isset($_SESSION[ self::$loginSessionLocation ])) {
-            $_SESSION[ self::$loginSessionLocation ] = [false, null];
-
             return false;
         } else {
 
-            $isLoggedIn = $_SESSION[ self::$loginSessionLocation ];
+            $currentUser = new UserClient();
+            $sessionUser = unserialize($_SESSION[ self::$loginSessionLocation ]);
 
-            if ($_SERVER['HTTP_USER_AGENT'] !== $isLoggedIn[1]) {
-                return false;
+            if ($currentUser->isSame($sessionUser)) {
+                return true;
             }
 
-            return $isLoggedIn[0];
+            return false;
         }
     }
 
     public function logOut()
     {
-        $_SESSION[ self::$loginSessionLocation ] = false;
+        $_SESSION[ self::$loginSessionLocation ] = null;
     }
 
     /**
-     * @param LoginModel $attempt
+     * @param LoginAttemptModel $attempt
      *
-     * @throws \Exception
+     * @throws \exceptions\IncorrectCredentialsException
      */
-    public function logIn(LoginAttemptModel $attempt)
+    public function logIn(\model\LoginAttemptModel $attempt)
     {
-        if ($attempt->getName() === $this->name && $this->verifyPassword($attempt->getPassword())) {
-
-            $array = [true, $_SERVER['HTTP_USER_AGENT']];
-
-            $_SESSION[ self::$loginSessionLocation ] = $array;
-        } else if ($attempt->getName() == "" && $attempt->getPassword() == "") {
-            throw new \exceptions\UserNameEmptyException("Username is missing");
-        } else if ($attempt->getPassword() == "") {
-            throw new \exceptions\PasswordEmptyException("Password is missing");
-        } else if ($attempt->getName() == "") {
-            throw new \exceptions\UserNameEmptyException("Username is missing");
+        if ($this->verify($attempt->getName(), $attempt->getPassword())) {
+            $toSave = new UserClient();
+            $_SESSION[ self::$loginSessionLocation ] = serialize($toSave);
         } else {
-            throw new \exceptions\IncorrectCredentialsException("Wrong name or password");
+            throw new \exceptions\IncorrectCredentialsException();
         }
     }
 
-    public function verifyPassword($passwordToVerify)
+    /**
+     *
+     * Very much unnecessary method as it is right now, but
+     * will take care of verifying pass and username against hashed
+     * versions later on.
+     *
+     * @param $usernameToVerify
+     * @param $passwordToVerify
+     *
+     * @return bool
+     */
+    public function verify($usernameToVerify, $passwordToVerify)
     {
 
-       if ($passwordToVerify === $this->password) {
+        if ($usernameToVerify === $this->name && $passwordToVerify === $this->password) {
             return true;
-       } else {
+        } else {
             return false;
-       }
+        }
 //        $fileArray = file("secret/supersecret.txt");
 //
 //        foreach ($fileArray as $line) {
@@ -113,11 +114,13 @@ class LoginModel
 //        return false;
     }
 
+    /**
+     * Direct login for VIP cookie peeps.
+     */
     public function cookieLogin()
     {
-        $array = [true, $_SERVER['HTTP_USER_AGENT']];
-
-        $_SESSION[ self::$loginSessionLocation ] = $array;
+        $toSave = new UserClient();
+        $_SESSION[ self::$loginSessionLocation ] = serialize($toSave);
     }
 
     /**
@@ -126,19 +129,6 @@ class LoginModel
     public function getKeep()
     {
         return $this->keep;
-    }
-
-    public function hashedSetter()
-    {
-
-        $username = "Admin";
-        $password = "Password";
-
-        $hashed = password_hash($password, PASSWORD_BCRYPT);
-
-        $toBeSaved = $username . "__" . $hashed . PHP_EOL;
-
-        file_put_contents("secret/supersecret.txt", $toBeSaved, FILE_APPEND);
     }
 
 }

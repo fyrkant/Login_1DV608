@@ -50,7 +50,6 @@ class LoginModel
             return false;
         } else {
             $sessionUser = unserialize($_SESSION[ self::$loginSessionLocation ]);
-            session_regenerate_id(true);
 
             if ($currentUser->isSame($sessionUser)) {
                 return true;

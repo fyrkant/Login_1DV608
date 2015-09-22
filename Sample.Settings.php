@@ -1,9 +1,10 @@
 <?php
 
-class Settings {
+class AppSettings
+{
 
     const USERNAME = "Admin";
     const PASSWORD = "Password";
-    const PASS_IS_HASHED = false;
+    const DATA_PATH = "./../secret/";
 
 }

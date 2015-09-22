@@ -14,19 +14,21 @@ class LoginView
 
     private $loginModel;
     private $messageView;
+    private $cookieJar;
 
     /**
      * LoginView constructor.
      *
      * @param \model\LoginModel $login
-     * @param \model\MessageModel $message
+     * @param \model\MessageModel|MessageView $message
      *
      * @internal param $model
      */
-    public function __construct(\model\LoginModel $login, \view\MessageView $message)
+    public function __construct(\model\LoginModel $login, \view\MessageView $message, \view\CookieJar $cookieJar)
     {
         $this->loginModel = $login;
         $this->messageView = $message;
+        $this->cookieJar = $cookieJar;
     }
 
 
@@ -35,16 +37,18 @@ class LoginView
      *
      * Should be called after a login attempt has been determined
      *
-     * @return  string html BUT writes to standard output and cookies!
+     * @param $isLoggedIn
+     *
+     * @return string html BUT writes to standard output and cookies!
      */
-    public function response()
+    public function response($isLoggedIn)
     {
 
         $message = $this->messageView->getMessage();
 
         $response = null;
 
-        if ($this->loginModel->isLoggedIn()) {
+        if ($isLoggedIn) {
             $response = $this->generateLogoutButtonHTML($message);
         } else {
             $response = $this->generateLoginFormHTML($message);
@@ -122,7 +126,7 @@ class LoginView
      */
     public function userTriedToLogin()
     {
-        if (isset($_POST[ self::$login ])) {
+        if (isset($_POST[ self::$login ]) || $this->cookieJar->cookieExists()) {
             return true;
         } else {
             return false;
@@ -150,14 +154,35 @@ class LoginView
     /**
      * @return \model\LoginAttemptModel
      */
-    public function getLoginAttempt()
+    public function getUserInput()
     {
         $name = $this->getInput(self::$name);
         $password = $this->getInput(self::$password);
         $keep = $this->getInput(self::$keep);
+        $isRemembered = $this->cookieJar->cookieExists() && $this->cookieJar->cookieIsOK() ? true : false;
 
-        $attempt = new \model\LoginAttemptModel($name, $password, $keep);
+        $attempt = new \model\LoginAttemptModel($name, $password, $keep, $isRemembered);
 
         return $attempt;
+    }
+
+    public function userIsRemembered() {
+        if ($this->cookieJar->cookieExists() && $this->cookieJar->cookieIsOK()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public function forgetUser() {
+        $this->cookieJar->clearCookies();
+    }
+    public function remember($username) {
+        $this->cookieJar->setLoginCookies($username);
+    }
+
+    public function getUserClient() {
+        $userClient = new \model\UserClient($_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
+
+        return $userClient;
     }
 }

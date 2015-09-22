@@ -19,7 +19,7 @@ class LayoutView
           ' . ($isLoggedIn ? '<h2>Logged in</h2>' : '<h2>Not logged in</h2>') . '
           
           <div class="container">
-              ' . $loginView->response() . '
+              ' . $loginView->response($isLoggedIn) . '
               
               ' . $dateTimeView->getHTML() . '
           </div>

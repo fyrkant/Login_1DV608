@@ -9,16 +9,18 @@ class LoginAttemptModel
     private $name;
     private $password;
     private $keep;
+    private $isRemembered;
 
     /**
      * @param string $name
      * @param string $password
+     * @param UserClient $client
      * @param bool|false $keep
      *
      * @throws \exceptions\PasswordEmptyException
      * @throws \exceptions\UserNameEmptyException
      */
-    public function __construct($name, $password, $keep)
+    public function __construct($name, $password, $keep, $isRemembered)
     {
         if ($name == "" && $password == "") {
             throw new \exceptions\UserNameEmptyException();
@@ -33,6 +35,15 @@ class LoginAttemptModel
         $this->name = $name;
         $this->password = $password;
         $this->keep = $keep;
+        $this->isRemembered = $isRemembered;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function isRemembered()
+    {
+        return $this->isRemembered;
     }
 
     /**

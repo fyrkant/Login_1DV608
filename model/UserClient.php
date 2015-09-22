@@ -6,39 +6,21 @@ namespace model;
 class UserClient
 {
     private $ip;
-    private $browser;
+    private $agent;
 
-    public function __construct()
+    public function __construct($ip, $agent)
     {
-        $this->ip = $_SERVER['REMOTE_ADDR'];
-        $this->browser = $_SERVER['HTTP_USER_AGENT'];
+        $this->ip = $ip;
+        $this->agent = $agent;
     }
 
     public function isSame(UserClient $uc) {
 
-        if ($uc->browser === $this->browser && $uc->getIp() === $this->ip) {
+        if ($uc->agent === $this->agent && $uc->ip === $this->ip) {
             return true;
         } else {
             return false;
         }
     }
-
-    /**
-     * @return mixed
-     */
-    public function getIp()
-    {
-        return $this->ip;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBrowser()
-    {
-        return $this->browser;
-    }
-
-
 
 }

@@ -26,6 +26,7 @@ require_once('controller/LoginController.php');
 require_once('exceptions/UserNameEmptyException.php');
 require_once('exceptions/PasswordEmptyException.php');
 require_once('exceptions/IncorrectCredentialsException.php');
+require_once('exceptions/IncorrectCookieException.php');
 
 // MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
 error_reporting(E_ALL);
@@ -41,14 +42,15 @@ $dateTimeView = new view\DateTimeView($dateTimeModel);
 $messageModel = new model\MessageModel();
 $messageView = new \view\MessageView($messageModel);
 
-$loginModel = new model\LoginModel($settings::USERNAME, $settings::PASSWORD);
-$loginView = new view\LoginView($loginModel, $messageView);
-
 $cookieJar = new view\CookieJar($settings::DATA_PATH);
-$loginController = new controller\LoginController($loginModel, $loginView, $messageModel, $cookieJar);
+
+$loginModel = new model\LoginModel($settings::USERNAME, $settings::PASSWORD);
+$loginView = new view\LoginView($loginModel, $messageView, $cookieJar);
+
+$loginController = new controller\LoginController($loginModel, $loginView, $messageModel);
 
 $loginController->doControl();
-$loggedIn = $loginController->userLoggedInCheck();
+$loggedIn = $loginController->getIsLoggedIn();
 
 $layoutView = new view\LayoutView();
 

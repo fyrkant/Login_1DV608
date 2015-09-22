@@ -40,17 +40,17 @@ class LoginModel
     }
 
     /**
+     * @param UserClient $currentUser
+     *
      * @return bool
      */
-    public function isLoggedIn()
+    public function isLoggedIn(UserClient $currentUser)
     {
-
         if (!isset($_SESSION[ self::$loginSessionLocation ])) {
             return false;
         } else {
-
-            $currentUser = new UserClient();
             $sessionUser = unserialize($_SESSION[ self::$loginSessionLocation ]);
+            session_regenerate_id(true);
 
             if ($currentUser->isSame($sessionUser)) {
                 return true;
@@ -70,11 +70,10 @@ class LoginModel
      *
      * @throws \exceptions\IncorrectCredentialsException
      */
-    public function logIn(\model\LoginAttemptModel $attempt)
+    public function tryLogin(\model\LoginAttemptModel $attempt, \model\UserClient $currentUser)
     {
         if ($this->verify($attempt->getName(), $attempt->getPassword())) {
-            $toSave = new UserClient();
-            $_SESSION[ self::$loginSessionLocation ] = serialize($toSave);
+            $this->login($currentUser);
         } else {
             throw new \exceptions\IncorrectCredentialsException();
         }
@@ -116,11 +115,12 @@ class LoginModel
 
     /**
      * Direct login for VIP cookie peeps.
+     *
+     * @param UserClient $currentUser
      */
-    public function cookieLogin()
+    public function login(\model\UserClient $currentUser)
     {
-        $toSave = new UserClient();
-        $_SESSION[ self::$loginSessionLocation ] = serialize($toSave);
+        $_SESSION[ self::$loginSessionLocation ] = serialize($currentUser);
     }
 
     /**

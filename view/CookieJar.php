@@ -73,7 +73,7 @@ class CookieJar
             }
         }
 
-        return false;
+        throw new \exceptions\IncorrectCookieException();
 
     }
 
@@ -85,6 +85,13 @@ class CookieJar
         $password = $_COOKIE[ self::$cookiePassword ];
 
         return $password;
+    }
+
+    public function getCookieUsername()
+    {
+        $username = $_COOKIE[ self::$cookieName ];
+
+        return $username;
     }
 
     public function clearCookies()

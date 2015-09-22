@@ -19,7 +19,7 @@ class MessageView
         "Welcome"         => "Welcome",
         "WelcomeRemember" => "Welcome and you will be remembered",
         "CookieWelcome"   => "Welcome back with cookie",
-        "CookieError"     => "Wrong information in cookie",
+        "CookieError"     => "Wrong information in cookies",
         "ByeBye"          => "Bye bye!"
     ];
     /**

@@ -9,34 +9,15 @@ class LoginModel
     private static $loginSessionLocation = "LoginModel::LoggedIn";
     private $name;
     private $password;
-    private $keep;
 
     /**
      * @param string $name
      * @param string $password
-     * @param bool|false $keep
      */
-    public function __construct($name, $password, $keep = false)
+    public function __construct($name, $password)
     {
         $this->name = $name;
         $this->password = $password;
-        $this->keep = $keep;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPassword()
-    {
-        return $this->password;
     }
 
     /**
@@ -66,6 +47,8 @@ class LoginModel
 
     /**
      * @param LoginAttemptModel $attempt
+     *
+     * @param UserClient $currentUser
      *
      * @throws \exceptions\IncorrectCredentialsException
      */
@@ -97,37 +80,14 @@ class LoginModel
         } else {
             return false;
         }
-//        $fileArray = file("secret/supersecret.txt");
-//
-//        foreach ($fileArray as $line) {
-//            $exploded = explode("__", $line);
-//            $hashedUser = $exploded[0];
-//            $hashedPassword = trim($exploded[1]);
-//
-//            if ($username === $hashedUser) {
-//                return password_verify($passwordToVerify, $hashedPassword);
-//            }
-//        }
-//
-//        return false;
     }
 
     /**
-     * Direct login for VIP cookie peeps.
-     *
      * @param UserClient $currentUser
      */
     public function login(\model\UserClient $currentUser)
     {
         $_SESSION[ self::$loginSessionLocation ] = serialize($currentUser);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getKeep()
-    {
-        return $this->keep;
     }
 
 }

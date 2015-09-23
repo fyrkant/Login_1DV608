@@ -11,11 +11,12 @@ class CookieJar
 
     private static $filename = "file.txt";
 
-    private $dataPath;
-
+    /**
+     * @param $dataPath
+     */
     public function __construct($dataPath)
     {
-        $this->dataPath = $dataPath;
+        self::$filename = $dataPath . self::$filename;
     }
 
     /**
@@ -45,7 +46,7 @@ class CookieJar
 
         $stringToSave = $randomString . "_" . $cookieLife . "\n";
 
-        file_put_contents($this->dataPath . self::$filename, $stringToSave, FILE_APPEND);
+        file_put_contents(self::$filename, $stringToSave, FILE_APPEND);
 
         setcookie(self::$cookieName, $userName, $cookieLife, "/");
         setcookie(self::$cookiePassword, $randomString, $cookieLife, "/");
@@ -54,14 +55,15 @@ class CookieJar
 
     /**
      * @return bool
+     * @throws \exceptions\IncorrectCookieException
      */
     public function cookieIsOK()
     {
-        $cookiePassword = $this->getCookiePassword();
+        $cookiePassword = $_COOKIE[ self::$cookiePassword ];
 
         $now = time();
 
-        $fileArray = file($this->dataPath . self::$filename);
+        $fileArray = file(self::$filename);
 
         foreach ($fileArray as $key => $line) {
             $exploded = explode("_", $line);
@@ -78,28 +80,11 @@ class CookieJar
 
     }
 
-    /**
-     * @return string Randomized password string from cookie
-     */
-    public function getCookiePassword()
-    {
-        $password = $_COOKIE[ self::$cookiePassword ];
-
-        return $password;
-    }
-
-    public function getCookieUsername()
-    {
-        $username = $_COOKIE[ self::$cookieName ];
-
-        return $username;
-    }
-
     public function clearCookies()
     {
         $cookieString = $_COOKIE[ self::$cookiePassword ];
 
-        $fileArray = file($this->dataPath . self::$filename);
+        $fileArray = file(self::$filename);
 
         foreach ($fileArray as $key => $line) {
             $exploded = explode("_", $line);
@@ -113,7 +98,7 @@ class CookieJar
         }
 
         $fileArray = array_values($fileArray);
-        file_put_contents($this->dataPath . self::$filename, implode($fileArray));
+        file_put_contents(self::$filename, implode($fileArray));
 
         unset($_COOKIE[ self::$cookieName ]);
         setcookie(self::$cookieName, null, -1, "/");
@@ -122,7 +107,9 @@ class CookieJar
 
     }
 
-
+    /**
+     * @return string
+     */
     public function getMessageKey()
     {
         $messageKey = isset($_COOKIE[ self::$messageKeyCookiePosition ]) ? $_COOKIE[ self::$messageKeyCookiePosition ] : "";
@@ -133,7 +120,11 @@ class CookieJar
         return $messageKey;
     }
 
-    public function setMessageKey($key) {
+    /**
+     * @param $key
+     */
+    public function setMessageKey($key)
+    {
         setcookie(self::$messageKeyCookiePosition, $key, 0, "/");
         $_COOKIE[ self::$messageKeyCookiePosition ] = $key;
     }

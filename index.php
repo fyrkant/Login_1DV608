@@ -31,7 +31,6 @@ require_once('exceptions/IncorrectCookieException.php');
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 
-// Initiate models
 
 $settings = new AppSettings();
 

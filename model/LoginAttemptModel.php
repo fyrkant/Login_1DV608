@@ -14,11 +14,13 @@ class LoginAttemptModel
     /**
      * @param string $name
      * @param string $password
-     * @param UserClient $client
      * @param bool|false $keep
+     *
+     * @param $isRemembered
      *
      * @throws \exceptions\PasswordEmptyException
      * @throws \exceptions\UserNameEmptyException
+     * @internal param UserClient $client
      */
     public function __construct($name, $password, $keep, $isRemembered)
     {

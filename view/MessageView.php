@@ -29,6 +29,9 @@ class MessageView
     }
 
 
+    /**
+     * @return string
+     */
     public function getMessage()
     {
         $messageKey = $this->cookieJar->getMessageKey();
@@ -38,7 +41,11 @@ class MessageView
         return $message;
     }
 
-    public function setMessageKey($key) {
+    /**
+     * @param $key
+     */
+    public function setMessageKey($key)
+    {
         $this->cookieJar->setMessageKey($key);
     }
 

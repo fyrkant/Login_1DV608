@@ -10,7 +10,7 @@ class LoginController
     private $loginView;
 
     /**
-     * MainController constructor.
+     * LoginController constructor.
      *
      * @param \model\LoginModel $loginModel
      * @param \view\LoginView $loginView
@@ -65,6 +65,9 @@ class LoginController
     }
 
 
+    /**
+     * @param \model\UserClient $currentUser
+     */
     private function tryLogin(\model\UserClient $currentUser)
     {
 

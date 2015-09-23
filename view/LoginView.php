@@ -20,7 +20,8 @@ class LoginView
      * LoginView constructor.
      *
      * @param \model\LoginModel $login
-     * @param \model\MessageModel|MessageView $message
+     * @param \view\MessageView $message
+     * @param CookieJar $cookieJar
      *
      * @internal param $model
      */
@@ -152,6 +153,8 @@ class LoginView
     }
 
     /**
+     * Gets the user input and checks cookies.
+     *
      * @return \model\LoginAttemptModel
      */
     public function getUserInput()
@@ -161,13 +164,14 @@ class LoginView
         $keep = $this->getInput(self::$keep);
 
         try {
+
+            // If cookie exists the cookieIsOk-method checks it
+            // and throws a IncorrectCookieException if it has been tampered with.
             $isRemembered = $this->cookieJar->cookieExists() ? $this->cookieJar->cookieIsOK() : false;
 
-            if ($isRemembered) {
-                $attempt = new \model\LoginAttemptModel("Cookie", "VIP", true, true);
-            } else {
-                $attempt = new \model\LoginAttemptModel($name, $password, $keep, $isRemembered);
-            }
+            $attempt = $isRemembered ? // If cookie checks out...
+                new \model\LoginAttemptModel("Cookie", "VIP", true, true) : // VIP all the way.
+                new \model\LoginAttemptModel($name, $password, $keep, $isRemembered); // Else it's the hard way.
 
             return $attempt;
         } catch (\exceptions\UserNameEmptyException $e) {
@@ -188,25 +192,22 @@ class LoginView
         $this->messageView->setMessageKey($key);
     }
 
-    public function userIsRemembered()
-    {
-        if ($this->cookieJar->cookieExists() && $this->cookieJar->cookieIsOK()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public function forgetUser()
     {
         $this->cookieJar->clearCookies();
     }
 
+    /**
+     * @param $username
+     */
     public function rememberUser($username)
     {
         $this->cookieJar->setLoginCookies($username);
     }
 
+    /**
+     * @return \model\UserClient
+     */
     public function getUserClient()
     {
         $userClient = new \model\UserClient($_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);

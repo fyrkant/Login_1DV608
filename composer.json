@@ -1,10 +1,10 @@
 {
   "autoload": {
     "psr-4": {
-      "model\\": "model",
-      "view\\": "view",
-      "controller\\": "controller",
-      "exceptions\\": "exceptions"
+      "model\\":      "src/model",
+      "view\\":       "src/view",
+      "controller\\": "src/controller",
+      "exceptions\\": "src/exceptions"
     }
   }
 }

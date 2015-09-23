@@ -1,8 +1,8 @@
 <?php
 
-require_once('/exceptions/IncorrectCredentialsException.php');
-require_once("/model/LoginModel.php");
-require_once("/model/UserClient.php");
+require_once('/src/exceptions/IncorrectCredentialsException.php');
+require_once("/src/model/LoginModel.php");
+require_once("/src/model/UserClient.php");
 
 class LoginModelTest extends PHPUnit_Framework_TestCase {
 

@@ -2,9 +2,9 @@
 
 namespace tests;
 
-require_once('/exceptions/UserNameEmptyException.php');
-require_once('/exceptions/PasswordEmptyException.php');
-require_once('/model/LoginAttemptModel.php');
+require_once('/src/exceptions/UserNameEmptyException.php');
+require_once('/src/exceptions/PasswordEmptyException.php');
+require_once('/src/model/LoginAttemptModel.php');
 
 use model\LoginAttemptModel;
 

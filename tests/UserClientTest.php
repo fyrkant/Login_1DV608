@@ -2,7 +2,7 @@
 
 namespace tests;
 
-require_once('/model/UserClient.php');
+require_once('/src/model/UserClient.php');
 
 class UserClientTest extends \PHPUnit_Framework_TestCase
 {

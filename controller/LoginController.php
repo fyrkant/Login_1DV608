@@ -65,9 +65,6 @@ class LoginController
     }
 
 
-    /**
-     * @param \model\UserClient $currentUser
-     */
     private function tryLogin(\model\UserClient $currentUser)
     {
 

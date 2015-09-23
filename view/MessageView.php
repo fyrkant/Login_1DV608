@@ -1,14 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: fyrkant
- * Date: 2015-09-22
- * Time: 13:10
- */
 
 namespace view;
 
-
+/**
+ * MessageView with keys and messages, for easy changes/translations.
+ * */
 class MessageView
 {
 
@@ -23,24 +19,27 @@ class MessageView
         "ByeBye"          => "Bye bye!"
     ];
     /**
-     * @var \model\MessageModel
+     * @var CookieJar
      */
-    private $model;
+    private $cookieJar;
 
-    public function __construct(\model\MessageModel $model)
+    public function __construct(\view\CookieJar $cookieJar)
     {
-
-        $this->model = $model;
+        $this->cookieJar = $cookieJar;
     }
 
 
     public function getMessage()
     {
-        $messageKey = $this->model->getMessageKey();
+        $messageKey = $this->cookieJar->getMessageKey();
 
         $message = isset(self::$errorMessages[ $messageKey ]) ? self::$errorMessages[ $messageKey ] : "";
 
         return $message;
+    }
+
+    public function setMessageKey($key) {
+        $this->cookieJar->setMessageKey($key);
     }
 
 }

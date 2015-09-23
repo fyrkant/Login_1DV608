@@ -7,6 +7,7 @@ class CookieJar
 
     private static $cookieName = 'LoginView::CookieName';
     private static $cookiePassword = 'LoginView::CookiePassword';
+    private static $messageKeyCookiePosition = "CookieJar::message";
 
     private static $filename = "file.txt";
 
@@ -121,4 +122,19 @@ class CookieJar
 
     }
 
+
+    public function getMessageKey()
+    {
+        $messageKey = isset($_COOKIE[ self::$messageKeyCookiePosition ]) ? $_COOKIE[ self::$messageKeyCookiePosition ] : "";
+
+        unset($_COOKIE[ self::$messageKeyCookiePosition ]);
+        setcookie(self::$messageKeyCookiePosition, null, -1, "/");
+
+        return $messageKey;
+    }
+
+    public function setMessageKey($key) {
+        setcookie(self::$messageKeyCookiePosition, $key, 0, "/");
+        $_COOKIE[ self::$messageKeyCookiePosition ] = $key;
+    }
 }

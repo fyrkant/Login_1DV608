@@ -9,7 +9,6 @@ require_once("AppSettings.php");
 require_once('model/DateTimeModel.php');
 require_once('model/LoginModel.php');
 require_once('model/LoginAttemptModel.php');
-require_once('model/MessageModel.php');
 require_once('model/UserClient.php');
 
 // Views
@@ -39,15 +38,14 @@ $settings = new AppSettings();
 $dateTimeModel = new model\DateTimeModel();
 $dateTimeView = new view\DateTimeView($dateTimeModel);
 
-$messageModel = new model\MessageModel();
-$messageView = new \view\MessageView($messageModel);
-
 $cookieJar = new view\CookieJar($settings::DATA_PATH);
+
+$messageView = new \view\MessageView($cookieJar);
 
 $loginModel = new model\LoginModel($settings::USERNAME, $settings::PASSWORD);
 $loginView = new view\LoginView($loginModel, $messageView, $cookieJar);
 
-$loginController = new controller\LoginController($loginModel, $loginView, $messageModel);
+$loginController = new controller\LoginController($loginModel, $loginView);
 
 $loginController->doControl();
 $loggedIn = $loginController->getIsLoggedIn();

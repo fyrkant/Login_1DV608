@@ -22,6 +22,8 @@ $messageView = new \view\MessageView($cookieJar);
 $loginModel = new model\LoginModel($settings::USERNAME, $settings::PASSWORD);
 $loginView = new view\LoginView($loginModel, $messageView, $cookieJar);
 
+$registerView = new view\RegisterView();
+
 $loginController = new controller\LoginController($loginModel, $loginView);
 
 $loginController->doControl();
@@ -29,5 +31,5 @@ $loggedIn = $loginController->getIsLoggedIn();
 
 $layoutView = new view\LayoutView();
 
-$layoutView->render($loggedIn, $loginView, $dateTimeView);
+$layoutView->render($loggedIn, $loginView, $registerView, $dateTimeView);
 

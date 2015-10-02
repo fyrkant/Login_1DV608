@@ -6,7 +6,7 @@ namespace view;
 class LayoutView
 {
 
-    public function render($isLoggedIn, LoginView $loginView, DateTimeView $dateTimeView)
+    public function render($isLoggedIn, LoginView $loginView, RegisterView $registerView, DateTimeView $dateTimeView)
     {
         echo '<!DOCTYPE html>
       <html>
@@ -20,7 +20,7 @@ class LayoutView
           ' . ($isLoggedIn ? '<h2>Logged in</h2>' : '<h2>Not logged in</h2>') . '
           
           <div class="container">
-              ' . $loginView->response($isLoggedIn) . '
+              ' .($loginView->userWantsToRegister() ? $registerView->generateRegisterFormHTML("") : $loginView->response($isLoggedIn)) . '
               
               ' . $dateTimeView->getHTML() . '
           </div>

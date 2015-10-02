@@ -15,7 +15,8 @@ class LayoutView
           <title>Login Example</title>
         </head>
         <body>
-          <h1>Test!</h1>
+          <h1>Assignment 2</h1>
+          ' . ($loginView->userWantsToRegister() ? '<a href="?">Back to login</a>' : '<a href="?register">Register a new user</a>') .'
           ' . ($isLoggedIn ? '<h2>Logged in</h2>' : '<h2>Not logged in</h2>') . '
           
           <div class="container">

@@ -146,6 +146,16 @@ class LoginView
         }
     }
 
+    public function userWantsToRegister()
+    {
+        if (isset($_GET[ "register" ])) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
     public function redirect()
     {
         header("Location: " . $_SERVER['REQUEST_URI']);

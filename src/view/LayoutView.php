@@ -15,7 +15,7 @@ class LayoutView
           <title>Login Example</title>
         </head>
         <body>
-          <h1>Assignment 2</h1>
+          <h1>Test!</h1>
           ' . ($isLoggedIn ? '<h2>Logged in</h2>' : '<h2>Not logged in</h2>') . '
           
           <div class="container">

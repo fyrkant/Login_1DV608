@@ -13,6 +13,11 @@ class RegisterAttemptModel
 
     public function __construct($name, $password, $passwordRepeat)
     {
+
+        if (filter_var($name, FILTER_SANITIZE_STRING) !== $name) {
+            throw new \exceptions\InvalidCharactersException();
+        }
+
         if (mb_strlen($name) < 3 && mb_strlen($password) <6) {
             throw new \exceptions\PassAndNameLengthException();
         }

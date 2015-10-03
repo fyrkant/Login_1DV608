@@ -10,7 +10,26 @@ class RegisterView
     private static $name = 'RegisterView::UserName';
     private static $password = 'RegisterView::Password';
     private static $passwordRepeat = 'RegisterView::PasswordRepeat';
+    private static $register = "DoRegistration";
+    /**
+     * @var MessageView
+     */
+    private $messageView;
 
+    public function __construct(\view\MessageView $message)
+    {
+        $this->messageView = $message;
+    }
+
+    public function response()
+    {
+
+        $message = $this->messageView->getMessage();
+
+        $response = $this->generateRegisterFormHTML($message);
+
+        return $response;
+    }
 
     public function generateRegisterFormHTML($message)
     {
@@ -30,10 +49,42 @@ class RegisterView
                 <label for="' . self::$passwordRepeat . '">Repeat password :</label>
                 <input type="password" size="20" name="' . self::$passwordRepeat . '" id="' . self::$passwordRepeat . '" value="" />
                 <br />
-                <input id="submit" type="submit" name="DoRegistration" value="Register" />
+                <input id="submit" type="submit" name="' . self::$register . '" value="Register" />
                 <br />
             </fieldset>
         </form>';
+    }
+
+    public function userTriedToRegister()
+    {
+        if (isset($_POST[ self::$register ])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function getUserInput()
+    {
+        $name = isset($_POST[ self::$name ]) ? $_POST[ self::$name ] : "";
+        $password = isset($_POST[ self::$password ]) ? $_POST[ self::$password ] : "";
+        $passwordRepeat = isset($_POST[ self::$passwordRepeat ]) ? $_POST[ self::$passwordRepeat ] : "";
+
+        try {
+
+            $attempt = new \model\RegisterAttemptModel($name, $password, $passwordRepeat);
+
+        } catch (\exceptions\UsernameLengthException $e) {
+            $this->messageView->setMessageKey("UsernameLength");
+        } catch (\exceptions\PasswordLengthException $e) {
+            $this->messageView->setMessageKey("PasswordLength");
+        } catch (\exceptions\PasswordNotMatchingException $e) {
+            $this->messageView->setMessageKey("PasswordMatch");
+        } catch (\exceptions\InvalidCharactersException $e) {
+            $this->messageView->setMessageKey("InvalidCharacters");
+        } catch (\exceptions\PassAndNameLengthException $e) {
+            $this->messageView->setMessageKey("PassAndNameLength");
+        }
 
     }
 

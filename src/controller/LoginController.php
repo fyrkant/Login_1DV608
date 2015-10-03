@@ -8,18 +8,25 @@ class LoginController
 
     private $loginModel;
     private $loginView;
+    /**
+     * @var RegisterController
+     */
+    private $registerController;
 
     /**
      * LoginController constructor.
      *
      * @param \model\LoginModel $loginModel
      * @param \view\LoginView $loginView
+     * @param RegisterController $registerController
      */
     public function __construct(\model\LoginModel $loginModel,
-                                \view\LoginView $loginView)
+                                \view\LoginView $loginView,
+                                \controller\RegisterController $registerController)
     {
         $this->loginModel = $loginModel;
         $this->loginView = $loginView;
+        $this->registerController = $registerController;
     }
 
     /**
@@ -37,19 +44,26 @@ class LoginController
      */
     public function doControl()
     {
-        $currentUser = $this->loginView->getUserClient();
+        if ($this->loginView->userWantsToRegister()) {
 
-        $isLoggedIn = $this->loginModel->isLoggedIn($currentUser);
+            $this->registerController->doControl();
 
-        if ($isLoggedIn && $this->loginView->userWantsToLogOut()) {
+        } else {
 
-            $this->loginView->setMessageKey("ByeBye");
-            $this->logOut();
+            $currentUser = $this->loginView->getUserClient();
 
-        } else if (!$isLoggedIn && $this->loginView->userTriedToLogin()) {
+            $isLoggedIn = $this->loginModel->isLoggedIn($currentUser);
 
-            $this->tryLogin($currentUser);
+            if ($isLoggedIn && $this->loginView->userWantsToLogOut()) {
 
+                $this->loginView->setMessageKey("ByeBye");
+                $this->logOut();
+
+            } else if (!$isLoggedIn && $this->loginView->userTriedToLogin()) {
+
+                $this->tryLogin($currentUser);
+
+            }
         }
     }
 

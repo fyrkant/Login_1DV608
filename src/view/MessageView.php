@@ -22,7 +22,10 @@ class MessageView
         "PasswordMatch"     => "Passwords do not match.",
         "UserExists"        => "User exists, pick another username.",
         "InvalidCharacters" => "Username contains invalid characters.",
-        "Registered"        => "Registered new user."
+        "Registered"        => "Registered new user.",
+        "PassAndNameLength" => "Username has too few characters, at least 3 characters."
+                                . "<br />" .
+                                "Password has too few characters, at least 6 characters."
 
     ];
     /**

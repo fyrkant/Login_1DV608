@@ -12,22 +12,19 @@ class LoginView
     private static $keep = 'LoginView::KeepMeLoggedIn';
     private static $messageId = 'LoginView::Message';
 
-    private $loginModel;
     private $messageView;
     private $cookieJar;
 
     /**
      * LoginView constructor.
      *
-     * @param \model\LoginModel $login
      * @param \view\MessageView $message
      * @param CookieJar $cookieJar
      *
      * @internal param $model
      */
-    public function __construct(\model\LoginModel $login, \view\MessageView $message, \view\CookieJar $cookieJar)
+    public function __construct(\view\MessageView $message, \view\CookieJar $cookieJar)
     {
-        $this->loginModel = $login;
         $this->messageView = $message;
         $this->cookieJar = $cookieJar;
     }

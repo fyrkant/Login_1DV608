@@ -20,11 +20,12 @@ $cookieJar = new view\CookieJar($settings::DATA_PATH);
 $messageView = new \view\MessageView($cookieJar);
 
 $loginModel = new model\LoginModel($settings::USERNAME, $settings::PASSWORD);
-$loginView = new view\LoginView($loginModel, $messageView, $cookieJar);
+$loginView = new view\LoginView($messageView, $cookieJar);
 
-$registerView = new view\RegisterView();
+$registerView = new view\RegisterView($messageView);
+$registerController = new controller\RegisterController($registerView);
 
-$loginController = new controller\LoginController($loginModel, $loginView);
+$loginController = new controller\LoginController($loginModel, $loginView, $registerController);
 
 $loginController->doControl();
 $loggedIn = $loginController->getIsLoggedIn();

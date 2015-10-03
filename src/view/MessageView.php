@@ -49,10 +49,6 @@ class MessageView
         return $message;
     }
 
-    public function getMessageWithKey($key) {
-        return self::$errorMessages[$key];
-    }
-
     /**
      * @param $key
      */

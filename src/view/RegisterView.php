@@ -35,8 +35,8 @@ class RegisterView
     {
         $name = isset($_POST[ self::$name ]) ? $_POST[ self::$name ] : "";
 
-        return '
-        <form action="?register" method="post" enctype="multipart/form-data">
+        return '<h2>Register new user</h2>
+        <form method="post" enctype="multipart/form-data">
             <fieldset>
                 <legend>Register a new user - Write username and password</legend>
                 <p id="' . self::$messageId . '">' . $message . '</p>
@@ -73,6 +73,7 @@ class RegisterView
         try {
 
             $attempt = new \model\RegisterAttemptModel($name, $password, $passwordRepeat);
+            return $attempt;
 
         } catch (\exceptions\UsernameLengthException $e) {
             $this->messageView->setMessageKey("UsernameLength");
@@ -85,6 +86,8 @@ class RegisterView
         } catch (\exceptions\PassAndNameLengthException $e) {
             $this->messageView->setMessageKey("PassAndNameLength");
         }
+
+        return false;
 
     }
 

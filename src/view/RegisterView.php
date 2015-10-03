@@ -15,6 +15,7 @@ class RegisterView
      * @var MessageView
      */
     private $messageView;
+    private $message = "";
 
     public function __construct(\view\MessageView $message)
     {
@@ -24,9 +25,9 @@ class RegisterView
     public function response()
     {
 
-        $message = $this->messageView->getMessage();
+        //$message = $this->messageView->getMessage();
 
-        $response = $this->generateRegisterFormHTML($message);
+        $response = $this->generateRegisterFormHTML($this->message);
 
         return $response;
     }
@@ -76,15 +77,21 @@ class RegisterView
             return $attempt;
 
         } catch (\exceptions\UsernameLengthException $e) {
-            $this->messageView->setMessageKey("UsernameLength");
+
+            $this->message = $this->messageView->getMessageWithKey("UserNameLength");
+            //$this->messageView->setMessageKey("UsernameLength");
         } catch (\exceptions\PasswordLengthException $e) {
-            $this->messageView->setMessageKey("PasswordLength");
+            $this->message = $this->messageView->getMessageWithKey("PasswordLength");
+            //$this->messageView->setMessageKey("PasswordLength");
         } catch (\exceptions\PasswordNotMatchingException $e) {
-            $this->messageView->setMessageKey("PasswordMatch");
+            $this->message = $this->messageView->getMessageWithKey("PasswordMatch");
+            //$this->messageView->setMessageKey("PasswordMatch");
         } catch (\exceptions\InvalidCharactersException $e) {
-            $this->messageView->setMessageKey("InvalidCharacters");
+            $this->message = $this->messageView->getMessageWithKey("InvalidCharacters");
+            //$this->messageView->setMessageKey("InvalidCharacters");
         } catch (\exceptions\PassAndNameLengthException $e) {
-            $this->messageView->setMessageKey("PassAndNameLength");
+            $this->message = $this->messageView->getMessageWithKey("PassAndNameLength");
+            //$this->messageView->setMessageKey("PassAndNameLength");
         }
 
         return false;

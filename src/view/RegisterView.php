@@ -33,7 +33,7 @@ class RegisterView
 
     public function generateRegisterFormHTML($message)
     {
-        $name = isset($_POST[ self::$name ]) ? $_POST[ self::$name ] : "";
+        $name = isset($_POST[ self::$name ]) ? filter_var($_POST[ self::$name ], FILTER_SANITIZE_STRING) : "";
 
         return '<h2>Register new user</h2>
         <form method="post" enctype="multipart/form-data">

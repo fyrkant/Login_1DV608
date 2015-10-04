@@ -73,6 +73,7 @@ class RegisterView
         try {
 
             $attempt = new \model\RegisterAttemptModel($name, $password, $passwordRepeat);
+
             return $attempt;
 
         } catch (\exceptions\UsernameLengthException $e) {
@@ -95,5 +96,11 @@ class RegisterView
     public function setMessageKey($key)
     {
         $this->messageView->setMessageKey($key);
+    }
+
+    public function successRedirect($username)
+    {
+        header("Location: " . $_SERVER['REQUEST_URI']);
+        die();
     }
 }

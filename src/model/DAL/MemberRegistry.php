@@ -24,8 +24,7 @@ class MemberRegistry
 
     public function usernameExistsCheck($username)
     {
-        $fileContent = file_get_contents(self::$filename);
-        $decodedArray = json_decode($fileContent, true);
+        $decodedArray = $this->getArrayFromJSONFile();
 
         if (isset($decodedArray[ $username ])) {
             return true;
@@ -37,37 +36,35 @@ class MemberRegistry
 
     public function registerNewMember(\model\RegisterAttemptModel $attempt)
     {
-        $fileContent = file_get_contents(self::$filename);
-        $decodedArray = json_decode($fileContent, true);
+
+        $decodedArray = $this->getArrayFromJSONFile();
 
         $decodedArray[ $attempt->getName() ] = password_hash($attempt->getPassword(), PASSWORD_BCRYPT);
 
-        $json = json_encode($decodedArray);
-
-        file_put_contents(self::$filename, $json);
+        $this->saveArrayToJSON($decodedArray);
     }
 
     public function getMemberPassword($username)
     {
-        $fileContent = file_get_contents(self::$filename);
-        $decodedArray = json_decode($fileContent, true);
+        $decodedArray = $this->getArrayFromJSONFile();
 
         return $decodedArray[ $username ];
     }
 
-
-    public function saveLoginCredentials($userName)
+    private function getArrayFromJSONFile()
     {
-        $randomString = str_shuffle("1234567890abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZ");
-        $cookieLife = time() + (30 * 24 * 60 * 60);
 
-        $stringToSave = $randomString . "_" . $cookieLife . "\n";
+        $fileContent = file_get_contents(self::$filename);
+        $decodedArray = json_decode($fileContent, true);
 
-        file_put_contents(self::$filename, $stringToSave, FILE_APPEND);
+        return $decodedArray;
+    }
 
-        setcookie(self::$cookieName, $userName, $cookieLife, "/");
-        setcookie(self::$cookiePassword, $randomString, $cookieLife, "/");
+    private function saveArrayToJSON($array)
+    {
+        $json = json_encode($array);
 
+        file_put_contents(self::$filename, $json);
     }
 
     public function keep()

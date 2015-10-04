@@ -43,7 +43,7 @@ class CookieJar
     {
         $fileContentString = file_get_contents(self::$filename);
 
-        $decodedArray = json_decode($fileContentString);
+        $decodedArray = json_decode($fileContentString, true);
 
         $randomString = str_shuffle("1234567890abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZ");
         $cookieLife = time() + (30 * 24 * 60 * 60);
@@ -71,7 +71,7 @@ class CookieJar
 
         $fileContentString = file_get_contents(self::$filename);
 
-        $decodedArray = json_decode($fileContentString);
+        $decodedArray = json_decode($fileContentString, true);
 
         foreach ($decodedArray as $randomString => $timeToDie) {
             if ($cookiePassword === $randomString && $now < $timeToDie) {

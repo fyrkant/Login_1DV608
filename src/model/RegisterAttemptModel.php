@@ -9,7 +9,6 @@ class RegisterAttemptModel
 
     private $name;
     private $password;
-    private $passwordRepeat;
 
     public function __construct($name, $password, $passwordRepeat)
     {
@@ -34,7 +33,22 @@ class RegisterAttemptModel
 
         $this->name = $name;
         $this->password = $password;
-        $this->passwordRepeat = $passwordRepeat;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPassword()
+    {
+        return $this->password;
     }
 
 

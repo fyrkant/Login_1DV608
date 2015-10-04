@@ -18,11 +18,12 @@ $cookieJar = new view\CookieJar($settings::DATA_PATH);
 
 $messageView = new \view\MessageView($cookieJar);
 
-$loginModel = new model\LoginModel($settings::USERNAME, $settings::PASSWORD);
+$memberDAL = new \model\DAL\MemberRegistry($settings::DATA_PATH);
+$loginModel = new model\LoginModel($memberDAL);
 $loginView = new view\LoginView($messageView, $cookieJar);
 
 $registerView = new view\RegisterView($messageView);
-$registerController = new controller\RegisterController($registerView);
+$registerController = new controller\RegisterController($registerView, $memberDAL);
 
 $loginController = new controller\LoginController($loginModel, $loginView, $registerController);
 

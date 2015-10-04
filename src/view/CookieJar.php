@@ -9,7 +9,7 @@ class CookieJar
     private static $cookiePassword = 'LoginView::CookiePassword';
     private static $messageKeyCookiePosition = "CookieJar::message";
 
-    private static $filename = "file.txt";
+    private static $filename = "cookies.json";
 
     /**
      * @param $dataPath
@@ -41,12 +41,18 @@ class CookieJar
      */
     public function setLoginCookies($userName)
     {
+        $fileContentString = file_get_contents(self::$filename);
+
+        $decodedArray = json_decode($fileContentString);
+
         $randomString = str_shuffle("1234567890abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZ");
         $cookieLife = time() + (30 * 24 * 60 * 60);
 
-        $stringToSave = $randomString . "_" . $cookieLife . "\n";
+        $decodedArray[$randomString] = $cookieLife;
 
-        file_put_contents(self::$filename, $stringToSave, FILE_APPEND);
+        $json = json_encode($decodedArray);
+
+        file_put_contents(self::$filename, $json);
 
         setcookie(self::$cookieName, $userName, $cookieLife, "/");
         setcookie(self::$cookiePassword, $randomString, $cookieLife, "/");
@@ -63,42 +69,32 @@ class CookieJar
 
         $now = time();
 
-        $fileArray = file(self::$filename);
+        $fileContentString = file_get_contents(self::$filename);
 
-        foreach ($fileArray as $key => $line) {
-            $exploded = explode("_", $line);
+        $decodedArray = json_decode($fileContentString);
 
-            $correctPassword = $exploded[0];
-            $timeToDie = trim($exploded[1]);
-
-            if ($cookiePassword === $correctPassword && $now < $timeToDie) {
+        foreach ($decodedArray as $randomString => $timeToDie) {
+            if ($cookiePassword === $randomString && $now < $timeToDie) {
                 return true;
             }
         }
 
         throw new \exceptions\IncorrectCookieException();
-
     }
 
     public function clearCookies()
     {
         $cookieString = $_COOKIE[ self::$cookiePassword ];
 
-        $fileArray = file(self::$filename);
+        $fileContentString = file_get_contents(self::$filename);
 
-        foreach ($fileArray as $key => $line) {
-            $exploded = explode("_", $line);
+        $decodedArray = json_decode($fileContentString, true);
 
-            $passwordString = $exploded[0];
-            $timeToDie = trim($exploded[1]);
+        unset($decodedArray[$cookieString]);
 
-            if ($passwordString === $cookieString || $timeToDie < time()) {
-                unset($fileArray[ $key ]);
-            }
-        }
+        $json = json_encode($decodedArray);
 
-        $fileArray = array_values($fileArray);
-        file_put_contents(self::$filename, implode($fileArray));
+        file_put_contents(self::$filename, $json);
 
         unset($_COOKIE[ self::$cookieName ]);
         setcookie(self::$cookieName, null, -1, "/");

@@ -9,15 +9,20 @@ class LoginModel
     private static $loginSessionLocation = "LoginModel::LoggedIn";
     private $name;
     private $password;
+    /**
+     * @var DAL\MemberRegistry
+     */
+    private $DAL;
 
     /**
-     * @param string $name
-     * @param string $password
+     * @param DAL\MemberRegistry $memberRegistry
+     *
+     * @internal param string $name
+     * @internal param string $password
      */
-    public function __construct($name, $password)
+    public function __construct(\model\DAL\MemberRegistry $memberRegistry)
     {
-        $this->name = $name;
-        $this->password = $password;
+        $this->DAL = $memberRegistry;
     }
 
     /**
@@ -54,7 +59,7 @@ class LoginModel
      */
     public function tryLogin(\model\LoginAttemptModel $attempt, \model\UserClient $currentUser)
     {
-        if ($this->verify($attempt->getName(), $attempt->getPassword())) {
+        if ($this->verify($attempt)) {
             $this->login($currentUser);
         } else {
             throw new \exceptions\IncorrectCredentialsException();
@@ -72,14 +77,23 @@ class LoginModel
      *
      * @return bool
      */
-    public function verify($usernameToVerify, $passwordToVerify)
+    public function verify(\model\LoginAttemptModel $attempt)
     {
+        if ($this->DAL->usernameExistsCheck($attempt->getName())) {
+            $hashedPass = $this->DAL->getMemberPassword($attempt->getName());
 
-        if ($usernameToVerify === $this->name && $passwordToVerify === $this->password) {
-            return true;
-        } else {
-            return false;
+            if (password_verify($attempt->getPassword(), $hashedPass)){
+                return true;
+            }
         }
+
+        return false;
+
+//        if ($usernameToVerify === $this->name && $passwordToVerify === $this->password) {
+//            return true;
+//        } else {
+//            return false;
+//        }
     }
 
     /**

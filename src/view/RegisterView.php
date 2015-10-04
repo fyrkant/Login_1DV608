@@ -92,4 +92,8 @@ class RegisterView
 
     }
 
+    public function setMessageKey($key)
+    {
+        $this->messageView->setMessageKey($key);
+    }
 }

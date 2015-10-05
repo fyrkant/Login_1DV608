@@ -19,68 +19,28 @@ class MemberRegistry
             throw new \exceptions\UserAlreadyExistsException();
         }
 
-        $this->registerNewMember($attempt);
+        $this->save($attempt);
     }
 
     public function usernameExistsCheck($username)
     {
-        $decodedArray = $this->getArrayFromJSONFile();
-
-        if (isset($decodedArray[ $username ])) {
-            return true;
-        } else {
-            return false;
-        }
-
+        return file_exists(\AppSettings::DATA_PATH . $username);
     }
 
-    public function registerNewMember(\model\RegisterAttemptModel $attempt)
-    {
-
-        $decodedArray = $this->getArrayFromJSONFile();
-
-        $decodedArray[ $attempt->getName() ] = password_hash($attempt->getPassword(), PASSWORD_BCRYPT);
-
-        $this->saveArrayToJSON($decodedArray);
-    }
 
     public function getMemberPassword($username)
     {
-        $decodedArray = $this->getArrayFromJSONFile();
+        $fileContents = file_get_contents(\AppSettings::DATA_PATH . $username);
+        $member = unserialize($fileContents);
 
-        return $decodedArray[ $username ];
+        return $member->getPassword();
     }
 
-    private function getArrayFromJSONFile()
+    private function save(\model\RegisterAttemptModel $attempt)
     {
+        $member = new \model\RegisterModel($attempt);
+        $toSave = serialize($member);
 
-        $fileContent = file_get_contents(self::$filename);
-        $decodedArray = json_decode($fileContent, true);
-
-        return $decodedArray;
+        file_put_contents(\AppSettings::DATA_PATH . $attempt->getName(), $toSave);
     }
-
-    private function saveArrayToJSON($array)
-    {
-        $json = json_encode($array);
-
-        file_put_contents(self::$filename, $json);
-    }
-
-    public function keep()
-    {
-        $fileContentString = file_get_contents(self::$filename);
-
-        $decodedArray = json_decode($fileContentString);
-
-        $randomString = str_shuffle("1234567890abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZ");
-        $cookieLife = time() + (30 * 24 * 60 * 60);
-
-        $decodedArray[ $randomString ] = $cookieLife;
-
-        $json = json_encode($decodedArray);
-
-        file_put_contents(self::$filename, $json);
-    }
-
 }

@@ -15,7 +15,7 @@ class RegisterController
      */
     private $DAL;
 
-    public function __construct(\view\RegisterView $registerView, \model\DAL\MemberRegistry $memberRegistry)
+    public function __construct(\view\RegisterView $registerView, \model\DAL\MemberDALInterface $memberRegistry)
     {
         $this->registerView = $registerView;
         $this->DAL = $memberRegistry;

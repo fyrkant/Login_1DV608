@@ -3,7 +3,7 @@
 namespace model\DAL;
 
 
-class MemberRegistry
+class MemberRegistry implements MemberDALInterface
 {
 
     private static $filename = "passwords.json";

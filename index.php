@@ -18,7 +18,10 @@ $cookieJar = new view\CookieJar($settings::DATA_PATH);
 
 $messageView = new \view\MessageView($cookieJar);
 
-$memberDAL = new \model\DAL\MemberRegistry($settings::DATA_PATH);
+//$memberDAL = new \model\DAL\MemberRegistry($settings::DATA_PATH);
+
+$memberDAL = new \model\DAL\MemberDAL();
+
 $loginModel = new model\LoginModel($memberDAL);
 $loginView = new view\LoginView($messageView, $cookieJar);
 

@@ -20,7 +20,7 @@ class LoginModel
      * @internal param string $name
      * @internal param string $password
      */
-    public function __construct(\model\DAL\MemberRegistry $memberRegistry)
+    public function __construct(\model\DAL\MemberDALInterface $memberRegistry)
     {
         $this->DAL = $memberRegistry;
     }

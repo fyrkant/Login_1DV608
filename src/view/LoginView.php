@@ -11,6 +11,7 @@ class LoginView
     private static $password = 'LoginView::Password';
     private static $keep = 'LoginView::KeepMeLoggedIn';
     private static $messageId = 'LoginView::Message';
+    private static $nameSession = 'LoginView::NameSession';
 
     private $messageView;
     private $cookieJar;
@@ -84,6 +85,11 @@ class LoginView
 
         $name = $this->getInput(self::$name);
 
+        if (isset($_SESSION[ self::$nameSession ])) {
+            $name = $_SESSION[ self::$nameSession ];
+            unset($_SESSION[ self::$nameSession ]);
+        }
+
         return '
 			<form method="post" > 
 				<fieldset>
@@ -145,7 +151,7 @@ class LoginView
 
     public function userWantsToRegister()
     {
-        if (isset($_GET[ "register" ])) {
+        if (isset($_GET["register"])) {
             return true;
         } else {
             return false;
@@ -153,9 +159,14 @@ class LoginView
 
     }
 
-    public function redirect()
+    public function redirect($registeredName = "")
     {
-        header("Location: " . $_SERVER['REQUEST_URI']);
+        if ($registeredName != "") {
+            $_SESSION[self::$nameSession] = $registeredName;
+        }
+
+        $actual = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
+        header("Location: $actual");
         die();
     }
 

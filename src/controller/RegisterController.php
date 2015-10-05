@@ -27,10 +27,12 @@ class RegisterController
         if ($this->registerView->userTriedToRegister()) {
             $attempt = $this->registerView->getUserInput();
 
-            if ($attempt) {
+            if ($attempt != null) {
 
                 try {
                     $this->DAL->tryRegisterNew($attempt);
+
+                    return $attempt->getName();
                 } catch (\exceptions\UserAlreadyExistsException $e) {
                     $this->registerView->setMessageKey("UserExists");
                 }

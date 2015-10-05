@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: fyrkant
- * Date: 2015-10-05
- * Time: 10:48
- */
 
 namespace model\DAL;
 
@@ -12,32 +6,21 @@ namespace model\DAL;
 class MemberDAL implements  MemberDALInterface
 {
 
+    /*
+     * Using MongoDB driver
+     * URL: http://php.net/mongo
+     */
+
     private $db;
 
     public function __construct()
     {
         try {
             $m = new \MongoClient();
+            $this->db = $m->users->users;
         } catch (\MongoConnectionException $e) {
             echo $e->getMessage();
         }
-
-        $this->db = $m->users->users;
-    }
-
-    public function listData()
-    {
-        $toAdd = array("Name" => "Admin", "Password" => "Password");
-
-        //$this->db->insert($toAdd);
-
-
-        $all = $this->db->find();
-
-        foreach ($all as $user) {
-            var_dump($user);
-        }
-
     }
 
     public function tryRegisterNew(\model\RegisterAttemptModel $attempt)

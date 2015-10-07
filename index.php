@@ -9,18 +9,22 @@ require_once("vendor/autoload.php");
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 
-$settings = new AppSettings();
-
 $dateTimeModel = new model\DateTimeModel();
 $dateTimeView = new view\DateTimeView($dateTimeModel);
 
-$cookieJar = new view\CookieJar($settings::DATA_PATH);
+$cookieJar = new view\CookieJar(AppSettings::DATA_PATH);
 
 $messageView = new \view\MessageView($cookieJar);
 
-//$memberDAL = new \model\DAL\MemberRegistry($settings::DATA_PATH);
+$memberDAL = null;
 
-$memberDAL = new \model\DAL\MemberDAL();
+if (AppSettings::USE_DB) {
+    $memberDAL = new \model\DAL\MemberMongoDAL();
+} else {
+    $memberDAL = new \model\DAL\MemberFileDAL(AppSettings::DATA_PATH);
+}
+
+$memberDAL = new \model\DAL\MemberMongoDAL();
 
 $loginModel = new model\LoginModel($memberDAL);
 $loginView = new view\LoginView($messageView, $cookieJar);

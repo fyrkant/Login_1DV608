@@ -16,11 +16,17 @@ class RegisterView
      */
     private $messageView;
 
-    public function __construct(\view\MessageView $message)
+    /**
+     * @param MessageView $message
+     */
+    public function __construct(MessageView $message)
     {
         $this->messageView = $message;
     }
 
+    /**
+     * @return string
+     */
     public function response()
     {
 
@@ -31,6 +37,11 @@ class RegisterView
         return $response;
     }
 
+    /**
+     * @param $message
+     *
+     * @return string
+     */
     public function generateRegisterFormHTML($message)
     {
         $name = isset($_POST[ self::$name ]) ? filter_var($_POST[ self::$name ], FILTER_SANITIZE_STRING) : "";
@@ -55,6 +66,9 @@ class RegisterView
         </form>';
     }
 
+    /**
+     * @return bool
+     */
     public function userTriedToRegister()
     {
         if (isset($_POST[ self::$register ])) {
@@ -64,6 +78,9 @@ class RegisterView
         }
     }
 
+    /**
+     * @return bool|\model\RegisterAttemptModel
+     */
     public function getUserInput()
     {
         $name = isset($_POST[ self::$name ]) ? $_POST[ self::$name ] : "";
@@ -93,14 +110,11 @@ class RegisterView
 
     }
 
+    /**
+     * @param string $key
+     */
     public function setMessageKey($key)
     {
         $this->messageView->setMessageKey($key);
-    }
-
-    public function successRedirect($username)
-    {
-        header("Location: " . $_SERVER['REQUEST_URI']);
-        die();
     }
 }

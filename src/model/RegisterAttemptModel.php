@@ -10,6 +10,17 @@ class RegisterAttemptModel
     private $name;
     private $password;
 
+    /**
+     * @param string $name
+     * @param string $password
+     * @param string $passwordRepeat
+     *
+     * @throws \exceptions\InvalidCharactersException
+     * @throws \exceptions\PassAndNameLengthException
+     * @throws \exceptions\PasswordLengthException
+     * @throws \exceptions\PasswordNotMatchingException
+     * @throws \exceptions\UsernameLengthException
+     */
     public function __construct($name, $password, $passwordRepeat)
     {
 
@@ -30,13 +41,12 @@ class RegisterAttemptModel
             throw new \exceptions\PasswordNotMatchingException();
         }
 
-
         $this->name = $name;
         $this->password = $password;
     }
 
     /**
-     * @return mixed
+     * @return string name
      */
     public function getName()
     {
@@ -44,7 +54,7 @@ class RegisterAttemptModel
     }
 
     /**
-     * @return mixed
+     * @return string password
      */
     public function getPassword()
     {

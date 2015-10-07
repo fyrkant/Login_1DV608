@@ -3,16 +3,21 @@
 namespace model\DAL;
 
 
-class MemberRegistry implements MemberDALInterface
+class MemberFileDAL implements MemberDALInterface
 {
 
-    private static $filename = "passwords.json";
+    private static $dataPath;
 
     public function __construct($dataPath)
     {
-        self::$filename = $dataPath . self::$filename;
+        self::$dataPath = $dataPath;
     }
 
+    /**
+     * @param \model\RegisterAttemptModel $attempt
+     *
+     * @throws \exceptions\UserAlreadyExistsException
+     */
     public function tryRegisterNew(\model\RegisterAttemptModel $attempt)
     {
         if($this->usernameExistsCheck($attempt->getName())) {
@@ -22,25 +27,38 @@ class MemberRegistry implements MemberDALInterface
         $this->save($attempt);
     }
 
+    /**
+     * @param $username
+     *
+     * @return bool
+     */
     public function usernameExistsCheck($username)
     {
-        return file_exists(\AppSettings::DATA_PATH . $username);
+        return file_exists(self::$dataPath . $username);
     }
 
 
+    /**
+     * @param $username
+     *
+     * @return mixed
+     */
     public function getMemberPassword($username)
     {
-        $fileContents = file_get_contents(\AppSettings::DATA_PATH . $username);
+        $fileContents = file_get_contents(self::$dataPath . $username);
         $member = unserialize($fileContents);
 
         return $member->getPassword();
     }
 
+    /**
+     * @param \model\RegisterAttemptModel $attempt
+     */
     private function save(\model\RegisterAttemptModel $attempt)
     {
         $member = new \model\RegisterModel($attempt);
         $toSave = serialize($member);
 
-        file_put_contents(\AppSettings::DATA_PATH . $attempt->getName(), $toSave);
+        file_put_contents(self::$dataPath . $attempt->getName(), $toSave);
     }
 }

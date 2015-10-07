@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: fyrkant
- * Date: 2015-10-05
- * Time: 12:23
- */
+
 namespace model\DAL;
 
 interface MemberDALInterface

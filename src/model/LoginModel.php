@@ -7,22 +7,20 @@ class LoginModel
 {
 
     private static $loginSessionLocation = "LoginModel::LoggedIn";
-    private $name;
-    private $password;
     /**
-     * @var DAL\MemberRegistry
+     * @var DAL\MemberFileDAL
      */
     private $DAL;
 
     /**
-     * @param DAL\MemberRegistry $memberRegistry
+     * @param DAL\MemberDALInterface|DAL\MemberFileDAL $DAL
      *
      * @internal param string $name
      * @internal param string $password
      */
-    public function __construct(\model\DAL\MemberDALInterface $memberRegistry)
+    public function __construct(\model\DAL\MemberDALInterface $DAL)
     {
-        $this->DAL = $memberRegistry;
+        $this->DAL = $DAL;
     }
 
     /**

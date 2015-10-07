@@ -3,16 +3,16 @@
 class AppSettings
 {
 
-    /**
-     * Dummy username and password before real register system is implemented.
-     */
-    const USERNAME = "Admin";
-    const PASSWORD = "Password";
+    const DATA_PATH = "";
 
-    /**
-     * Data path that defines where files should be saved
-     * (should probably not be a folder reachable for the user).
-     */
-    const DATA_PATH = "SECRET-PLACE";
+    // If set to true, the application will use the MongoDB
+    // specified under this. If set to false it will save registered
+    // users in files on server (at the specified data path).
+    const USE_DB = true;
+
+    // MongoDB
+    const MONGO_USERNAME = "";
+    const MONGO_PASSWORD = "";
+    const MONGO_IP = "";
 
 }

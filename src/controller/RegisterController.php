@@ -11,10 +11,14 @@ class RegisterController
      */
     private $registerView;
     /**
-     * @var \model\DAL\MemberRegistry
+     * @var \model\DAL\MemberFileDAL
      */
     private $DAL;
 
+    /**
+     * @param \view\RegisterView $registerView
+     * @param \model\DAL\MemberDALInterface $memberRegistry
+     */
     public function __construct(\view\RegisterView $registerView, \model\DAL\MemberDALInterface $memberRegistry)
     {
         $this->registerView = $registerView;
@@ -22,7 +26,11 @@ class RegisterController
     }
 
 
-    public function doControl() {
+    /**
+     * @return mixed
+     */
+    public function doControl()
+    {
 
         if ($this->registerView->userTriedToRegister()) {
             $attempt = $this->registerView->getUserInput();

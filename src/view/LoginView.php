@@ -149,6 +149,9 @@ class LoginView
         }
     }
 
+    /**
+     * @return bool
+     */
     public function userWantsToRegister()
     {
         if (isset($_GET["register"])) {
@@ -159,10 +162,13 @@ class LoginView
 
     }
 
+    /**
+     * @param string $registeredName
+     */
     public function redirect($registeredName = "")
     {
         if ($registeredName != "") {
-            $_SESSION[self::$nameSession] = $registeredName;
+            $_SESSION[ self::$nameSession ] = $registeredName;
         }
 
         $actual = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];

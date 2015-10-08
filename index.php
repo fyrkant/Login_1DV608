@@ -13,7 +13,6 @@ $dateTimeModel = new model\DateTimeModel();
 $dateTimeView = new view\DateTimeView($dateTimeModel);
 
 $cookieJar = new view\CookieJar(AppSettings::DATA_PATH);
-
 $messageView = new \view\MessageView($cookieJar);
 
 $memberDAL = null;
@@ -23,8 +22,6 @@ if (AppSettings::USE_DB) {
 } else {
     $memberDAL = new \model\DAL\MemberFileDAL(AppSettings::DATA_PATH);
 }
-
-$memberDAL = new \model\DAL\MemberMongoDAL();
 
 $loginModel = new model\LoginModel($memberDAL);
 $loginView = new view\LoginView($messageView, $cookieJar);

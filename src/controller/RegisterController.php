@@ -17,14 +17,13 @@ class RegisterController
 
     /**
      * @param \view\RegisterView $registerView
-     * @param \model\DAL\MemberDALInterface $memberRegistry
+     * @param \model\DAL\MemberDALInterface $memberDAL
      */
-    public function __construct(\view\RegisterView $registerView, \model\DAL\MemberDALInterface $memberRegistry)
+    public function __construct(\view\RegisterView $registerView, \model\DAL\MemberDALInterface $memberDAL)
     {
         $this->registerView = $registerView;
-        $this->DAL = $memberRegistry;
+        $this->DAL = $memberDAL;
     }
-
 
     /**
      * @return mixed
@@ -35,7 +34,7 @@ class RegisterController
         if ($this->registerView->userTriedToRegister()) {
             $attempt = $this->registerView->getUserInput();
 
-            if ($attempt != null) {
+            if ($attempt) {
 
                 try {
                     $this->DAL->tryRegisterNew($attempt);
@@ -46,6 +45,8 @@ class RegisterController
                 }
             }
         }
+
+        return false;
     }
 
 }

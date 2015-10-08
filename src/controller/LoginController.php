@@ -47,7 +47,7 @@ class LoginController
         if ($this->loginView->userWantsToRegister()) {
 
             $newlyRegistered = $this->registerController->doControl();
-            if ($newlyRegistered != null) {
+            if ($newlyRegistered != false) {
                 $this->loginView->setMessageKey("Registered");
                 $this->loginView->redirect($newlyRegistered);
             }

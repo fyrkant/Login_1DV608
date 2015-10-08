@@ -7,6 +7,7 @@ class LoginModel
 {
 
     private static $loginSessionLocation = "LoginModel::LoggedIn";
+
     /**
      * @var DAL\MemberFileDAL
      */
@@ -70,17 +71,19 @@ class LoginModel
      * will take care of verifying pass and username against hashed
      * versions later on.
      *
-     * @param $usernameToVerify
-     * @param $passwordToVerify
+     * @param LoginAttemptModel $attempt
      *
      * @return bool
+     * @internal param $usernameToVerify
+     * @internal param $passwordToVerify
+     *
      */
     public function verify(\model\LoginAttemptModel $attempt)
     {
         if ($this->DAL->usernameExistsCheck($attempt->getName())) {
             $hashedPass = $this->DAL->getMemberPassword($attempt->getName());
 
-            if (password_verify($attempt->getPassword(), $hashedPass)){
+            if (password_verify($attempt->getPassword(), $hashedPass)) {
                 return true;
             }
         }
